@@ -1,4 +1,6 @@
 package com.example.shoppinggroceryapp.model.entities.order
 
-class CartId {
-}
+data class CartId(
+    val cartId:Int,
+    val productId:Int
+)

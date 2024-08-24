@@ -5,12 +5,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +18,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.setPadding
 import com.example.shoppinggroceryapp.R
-import com.example.shoppinggroceryapp.dataclass.User
+import com.example.shoppinggroceryapp.database.User
 import com.example.shoppinggroceryapp.fragments.topbar.TopBarFragment
 import com.example.shoppinggroceryapp.viewmodel.AppViewModel
 import com.google.android.material.button.MaterialButton

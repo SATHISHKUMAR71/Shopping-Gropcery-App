@@ -1,7 +1,7 @@
 package com.example.shoppinggroceryapp.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.shoppinggroceryapp.dataclass.User
+import com.example.shoppinggroceryapp.database.User
 
 class AppViewModel:ViewModel() {
 

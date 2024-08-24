@@ -1,4 +1,4 @@
-package com.example.shoppinggroceryapp.model.entities
+package com.example.shoppinggroceryapp.model.entities.user
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,9 +1,14 @@
-package com.example.shoppinggroceryapp.model.entities
+package com.example.shoppinggroceryapp.model.entities.products
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity
+//    foreignKeys = [ForeignKey(entity = Category::class,
+//        parentColumns = ["categoryId"],
+//        childColumns = ["categoryId"])]
+//)
 data class Products(
     @PrimaryKey
     val productId:Int,

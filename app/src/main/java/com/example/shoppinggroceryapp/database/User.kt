@@ -1,4 +1,4 @@
-package com.example.shoppinggroceryapp.dataclass
+package com.example.shoppinggroceryapp.database
 
 data class User(var firstName:String,
     var lastName:String,
