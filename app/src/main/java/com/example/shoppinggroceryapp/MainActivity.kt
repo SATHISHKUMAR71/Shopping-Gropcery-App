@@ -2,15 +2,12 @@ package com.example.shoppinggroceryapp
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
-import com.example.shoppinggroceryapp.fragments.appfragments.HomeFragment
+import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
-import com.example.shoppinggroceryapp.model.database.AppDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -29,13 +26,11 @@ class MainActivity : AppCompatActivity() {
         loginFragment = LoginFragment()
         ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION)
 
-//        val pref = getSharedPreferences("freshCart",Context.MODE_PRIVATE)
-//        val boo = pref.getBoolean("isSigned",false)
-//        println("data saved at start $boo")
-        val boo = false
+        val pref = getSharedPreferences("freshCart", Context.MODE_PRIVATE)
+        val boo = pref.getBoolean("isSigned",false)
         if(boo){
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentBody,HomeFragment())
+                .replace(R.id.fragmentBody,InitialFragment())
                 .commit()
         }
         else{

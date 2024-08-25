@@ -9,15 +9,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import com.example.shoppinggroceryapp.R
-import com.example.shoppinggroceryapp.fragments.appfragments.HomeFragment
+import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.model.database.AppDatabase
-import com.example.shoppinggroceryapp.model.entities.products.Category
-import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
-import com.example.shoppinggroceryapp.model.entities.products.Product
-import com.example.shoppinggroceryapp.model.entities.user.Address
-import com.example.shoppinggroceryapp.model.entities.user.User
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -75,7 +69,7 @@ class LoginFragment : Fragment() {
                     println("data saved $boo1")
                     handler.post{
                         parentFragmentManager.beginTransaction()
-                            .replace(R.id.fragmentBody,HomeFragment())
+                            .replace(R.id.fragmentBody,InitialFragment())
                             .commit()
                     }
                 }
