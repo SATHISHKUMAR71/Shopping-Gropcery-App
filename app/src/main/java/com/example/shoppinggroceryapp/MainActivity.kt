@@ -1,18 +1,20 @@
 package com.example.shoppinggroceryapp
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.shoppinggroceryapp.fragments.appfragments.HomeFragment
 import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
-import com.example.shoppinggroceryapp.viewmodel.AppViewModel
+import com.example.shoppinggroceryapp.model.database.AppDatabase
+
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appViewModel: AppViewModel
     private lateinit var fragmentTopBarView:FrameLayout
     private lateinit var fragmentBottomBarView:FrameLayout
     private lateinit var loginFragment: LoginFragment
@@ -25,12 +27,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         loginFragment = LoginFragment()
-
         ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION)
-        fragmentTopBarView = findViewById(R.id.fragmentSearchView)
-        fragmentBottomBarView = findViewById(R.id.fragmentBottomNavigation)
-        supportFragmentManager.beginTransaction()
-            .add(R.id.fragmentBody,loginFragment)
-            .commit()
+
+//        val pref = getSharedPreferences("freshCart",Context.MODE_PRIVATE)
+//        val boo = pref.getBoolean("isSigned",false)
+//        println("data saved at start $boo")
+        val boo = false
+        if(boo){
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentBody,HomeFragment())
+                .commit()
+        }
+        else{
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentBody,loginFragment)
+                .commit()
+        }
+
     }
 }

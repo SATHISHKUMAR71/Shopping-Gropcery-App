@@ -13,8 +13,7 @@ import androidx.room.PrimaryKey
 //)
 data class Category(
     @PrimaryKey
-    val categoryId:Int,
-    val parentCategoryId:Int,
     val categoryName:String,
+    val parentCategoryName:String,
     val categoryDescription:String
 )

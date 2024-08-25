@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CustomerRequest(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val helpId:Int,
     val orderId:Int,
     val request:String

@@ -4,6 +4,9 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import com.example.shoppinggroceryapp.model.entities.products.Category
+import com.example.shoppinggroceryapp.model.entities.products.Product
+import com.example.shoppinggroceryapp.model.entities.products.ProductWithCategory
 import com.example.shoppinggroceryapp.model.entities.user.User
 import com.example.shoppinggroceryapp.model.entities.user.Address
 
@@ -12,18 +15,27 @@ interface UserDao {
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addUser(user: User)
+    fun addUser(user: User)
 
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addAddress(address: Address)
+    fun addAddress(address: Address)
 
     @Query("SELECT * FROM USER")
-    suspend fun getAllUsers():List<User>
+    fun getAllUsers():List<User>
 
     @Query("SELECT * FROM Address")
-    suspend fun getAllAddress():List<Address>
+    fun getAllAddress():List<Address>
 
-    @Query("SELECT * FROM User JOIN Address ON User.userId = Address.userId")
-    suspend fun getAddressDetailsForUser():Map<User,List<Address>>
+    @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone) AND (userPassword=:password))")
+    fun getUser(emailOrPhone:String,password:String):User
+
+    @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone))")
+    fun getUserData(emailOrPhone:String):User
+
+    @Query("SELECT * FROM User JOIN Address ON User.userId = Address.userId WHERE User.userId=:id")
+    fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>
+
+    @Query("SELECT Product.*,Category.parentCategoryName,Category.categoryDescription FROM Product JOIN Category ON Product.categoryName=Category.categoryName")
+    fun getProducts():Map<Product,Category>
 }

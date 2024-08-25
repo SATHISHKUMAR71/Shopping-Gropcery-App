@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class CartMapping(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val cartId:Int,
     val userId:Int,
     val status:String

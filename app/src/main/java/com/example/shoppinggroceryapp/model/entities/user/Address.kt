@@ -12,7 +12,7 @@ import androidx.room.PrimaryKey
 //    ]
 //)
 data class Address (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val addressId:Int,
     val userId:Int,
     val buildingName:String,

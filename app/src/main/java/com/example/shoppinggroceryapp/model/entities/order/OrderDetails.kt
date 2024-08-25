@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class OrderDetails(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val orderId:Int,
     val cartId:Int,
     val addressId:Int,

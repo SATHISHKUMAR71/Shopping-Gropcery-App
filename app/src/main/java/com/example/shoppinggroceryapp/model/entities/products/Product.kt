@@ -1,7 +1,6 @@
 package com.example.shoppinggroceryapp.model.entities.products
 
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity
@@ -9,10 +8,10 @@ import androidx.room.PrimaryKey
 //        parentColumns = ["categoryId"],
 //        childColumns = ["categoryId"])]
 //)
-data class Products(
-    @PrimaryKey
-    val productId:Int,
-    val categoryId:Int,
+data class Product(
+    @PrimaryKey(autoGenerate = true)
+    val productId:Long,
+    val categoryName:String,
     val productName:String,
     val productDescription:String,
     val price:String,

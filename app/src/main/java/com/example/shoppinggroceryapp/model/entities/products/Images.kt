@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Images (
-    @PrimaryKey
-    val imageId:Int,
-    val productId:Int,
+    @PrimaryKey(autoGenerate = true)
+    val imageId:Long,
+    val productId:Long,
     val images:String
 )

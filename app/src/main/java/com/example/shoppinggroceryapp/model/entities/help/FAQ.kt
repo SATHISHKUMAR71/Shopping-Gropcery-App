@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class FAQ (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val faqId:Int,
     val question:String,
     val answer:String

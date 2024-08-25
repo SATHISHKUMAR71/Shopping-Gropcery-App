@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -18,9 +20,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.setPadding
 import com.example.shoppinggroceryapp.R
-import com.example.shoppinggroceryapp.database.User
 import com.example.shoppinggroceryapp.fragments.topbar.TopBarFragment
-import com.example.shoppinggroceryapp.viewmodel.AppViewModel
+import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.user.User
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 
@@ -38,6 +41,7 @@ class SignUpFragment : Fragment() {
     private lateinit var addProfileBtn:MaterialButton
     private lateinit var launchCameraForResult: ActivityResultLauncher<Intent>
     private lateinit var launchImageForResult: ActivityResultLauncher<Intent>
+    private lateinit var signUpTopbar:MaterialToolbar
     private var profileUri:String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,8 +73,7 @@ class SignUpFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_up, container, false)
-        val appTopBar = requireActivity().findViewById<FrameLayout>(R.id.fragmentSearchView)
-        appTopBar.visibility = View.VISIBLE
+        val handler = Handler(Looper.getMainLooper())
         firstName = view.findViewById(R.id.firstName)
         lastName = view.findViewById(R.id.signUpLastName)
         email = view.findViewById(R.id.signUpEmail)
@@ -79,13 +82,13 @@ class SignUpFragment : Fragment() {
         confirmedPassword = view.findViewById(R.id.signUpConfirmPassword)
         addProfileBtn = view.findViewById(R.id.addPictureBtn)
         addProfileImage = view.findViewById(R.id.addPictureImage)
-
+        signUpTopbar = view.findViewById(R.id.topbar)
+        val db = AppDatabase.getAppDatabase(requireContext()).getUserDao()
         signUp = view.findViewById(R.id.signUpNewUser)
-        requireActivity().findViewById<FrameLayout>(R.id.fragmentBottomNavigation).visibility = View.GONE
-        parentFragmentManager.beginTransaction()
-            .add(R.id.fragmentSearchView, TopBarFragment())
-            .commit()
 
+        signUpTopbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         addProfileBtn.setOnClickListener{
             showAlertDialog()
         }
@@ -93,22 +96,27 @@ class SignUpFragment : Fragment() {
             showAlertDialog()
         }
         signUp.setOnClickListener {
-            if((password.text?.isNotEmpty()==true)&&(confirmedPassword.text.toString() == password.text.toString())){
-                val user = User(firstName = firstName.text.toString(),
-                    lastName = lastName.text.toString(),
-                    emailAddress = email.text.toString(),
-                    password = password.text.toString(),
-                    phoneNumber = phone.text.toString(),
-                    profileImage = profileUri,
-                    isAdmin = false)
-                AppViewModel.usersList.add(user)
-                println("User: $user")
-                println("UserList : ${AppViewModel.usersList}")
-                Toast.makeText(context,"User Added Successfully",Toast.LENGTH_SHORT).show()
-                parentFragmentManager.popBackStack()
+            if((firstName.text.toString().isNotEmpty())&&(email.text.toString().isNotEmpty())&&(phone.text.toString().isNotEmpty())&&(password.text?.isNotEmpty()==true)&&(confirmedPassword.text.toString() == password.text.toString())){
+                Thread{
+                    val userEmail = db.getUserData(email.text.toString())
+                    val userPhone = db.getUserData(phone.text.toString())
+                    if(userEmail==null &&(userPhone == null)){
+                        db.addUser(User(0,"",firstName.text.toString(),lastName.text.toString(),email.text.toString(),phone.text.toString(),password.text.toString(),"",false))
+                        handler.post{
+                            Toast.makeText(context,"User Added Successfully",Toast.LENGTH_SHORT).show()
+                            parentFragmentManager.popBackStack()
+                        }
+                    }
+                    else{
+                        handler.post{
+                            Toast.makeText(context,"PhoNe Number or Email is Already Registered",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    println(db.getAllUsers())
+                }.start()
             }
             else{
-                println("No Input ${password.text} ${confirmedPassword.text} ${(password.text?.isNotEmpty()==true)} ${(confirmedPassword.text == password.text)}")
+                Toast.makeText(requireContext(),"Give inputs for Required Field",Toast.LENGTH_SHORT).show()
             }
         }
         return view
