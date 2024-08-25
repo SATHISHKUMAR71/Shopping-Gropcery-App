@@ -4,20 +4,23 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import com.example.shoppinggroceryapp.R
 
-class MainCategoryAdapter(var context: Context,var invisibleView:RecyclerView):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
+class MainCategoryAdapter(var context: Context):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
 
     inner class MainCategoryHolder(mainCategoryView:View):RecyclerView.ViewHolder(mainCategoryView){
         val invisibleView = itemView.findViewById<RecyclerView>(R.id.subCategoryRecyclerView)
         val addSymbol = itemView.findViewById<ImageView>(R.id.addSymbol)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainCategoryHolder {
@@ -46,6 +49,8 @@ class MainCategoryAdapter(var context: Context,var invisibleView:RecyclerView):R
                 }
                 else{
                     holder.addSymbol.setImageDrawable(ContextCompat.getDrawable(context,R.drawable.remove_24px))
+                    holder.invisibleView.adapter = SubCategoryAdapter(context)
+                    holder.invisibleView.layoutManager = LinearLayoutManager(context)
 //                    TransitionManager.beginDelayedTransition(holder.invisibleView,AutoTransition())
                     holder.invisibleView.visibility = View.VISIBLE
                     holder.invisibleView.alpha = 0f
