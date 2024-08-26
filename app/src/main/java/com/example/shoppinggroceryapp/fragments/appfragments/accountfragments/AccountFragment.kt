@@ -1,4 +1,4 @@
-package com.example.shoppinggroceryapp.fragments.appfragments
+package com.example.shoppinggroceryapp.fragments.appfragments.accountfragments
 
 import android.app.AlertDialog
 import android.content.Context
@@ -11,13 +11,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
-import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
-import com.example.shoppinggroceryapp.fragments.authentication.SignUpFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 
 class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
@@ -41,8 +37,9 @@ class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_account, container, false)
+        val name = MainActivity.userFirstName + " "+ MainActivity.userLastName
         userName = view.findViewById(R.id.userName)
-        userName.text = MainActivity.userName
+        userName.text =name
         editProfile = view.findViewById(R.id.editProfile)
         orderHistory = view.findViewById(R.id.orderHistory)
         help = view.findViewById(R.id.help)
@@ -50,7 +47,10 @@ class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
         savedAddress = view.findViewById(R.id.savedAddress)
         logoutUser = view.findViewById(R.id.logout)
         editProfile.setOnClickListener {
-            Toast.makeText(context,"Edit Profile Clicked",Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,EditProfile(searchBarTop))
+                .addToBackStack("Edit Profile")
+                .commit()
         }
         orderHistory.setOnClickListener {
             Toast.makeText(context,"Order History Clicked",Toast.LENGTH_SHORT).show()
@@ -87,27 +87,27 @@ class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
     }
 
     private fun restartApp() {
-        parentFragmentManager.popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE)
         val intent = Intent(context,MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
         val sharedPreferences = requireActivity().getSharedPreferences("freshCart",Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putBoolean("isSigned",false)
-        editor.putString("userName",null)
+        editor.putString("userFirstName",null)
+        editor.putString("userLastName",null)
         editor.putString("userEmail",null)
         editor.putString("userPhone",null)
         editor.putString("userId",null)
         editor.apply()
         startActivity(intent)
+        requireActivity().finish()
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        searchBarTop.visibility = View.GONE
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
+    override fun onStop() {
+        super.onStop()
         searchBarTop.visibility = View.VISIBLE
+    }
+    override fun onResume() {
+        super.onResume()
+        searchBarTop.visibility = View.GONE
     }
 }

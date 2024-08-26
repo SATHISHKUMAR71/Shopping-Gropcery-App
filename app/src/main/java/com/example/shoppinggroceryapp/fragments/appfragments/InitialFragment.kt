@@ -9,10 +9,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.MainActivity.Companion.userEmail
+import com.example.shoppinggroceryapp.MainActivity.Companion.userFirstName
 import com.example.shoppinggroceryapp.MainActivity.Companion.userId
-import com.example.shoppinggroceryapp.MainActivity.Companion.userName
+import com.example.shoppinggroceryapp.MainActivity.Companion.userLastName
 import com.example.shoppinggroceryapp.MainActivity.Companion.userPhone
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.accountfragments.AccountFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
 import com.google.android.material.search.SearchView
@@ -40,7 +42,8 @@ class InitialFragment : Fragment() {
         searchView.setupWithSearchBar(searchBar)
 
         val pref = requireActivity().getSharedPreferences("freshCart", Context.MODE_PRIVATE)
-        userName = pref.getString("userName","User").toString()
+        userFirstName = pref.getString("userFirstName","User").toString()
+        userLastName = pref.getString("userLastName","User").toString()
         userId = pref.getString("userId","userId").toString()
         userEmail = pref.getString("userEmail","userEmail").toString()
         userPhone = pref.getString("userPhone","userPhone").toString()
@@ -68,12 +71,18 @@ class InitialFragment : Fragment() {
             when(it.itemId){
                 R.id.account -> {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentMainLayout,AccountFragment(searchBarTop))
+                        .replace(R.id.fragmentMainLayout, AccountFragment(searchBarTop))
                         .addToBackStack("Account Fragment")
                         .commit()
                 }
                 R.id.cart -> {
                     parentFragmentManager.beginTransaction()
+//                        .setCustomAnimations(
+//                            R.anim.slide_in,
+//                            R.anim.fade_out,
+//                            R.anim.fade_in,
+//                            R.anim.slide_out
+//                        )
                         .replace(R.id.fragmentMainLayout,CartFragment())
                         .addToBackStack("Cart Fragment")
                         .commit()
