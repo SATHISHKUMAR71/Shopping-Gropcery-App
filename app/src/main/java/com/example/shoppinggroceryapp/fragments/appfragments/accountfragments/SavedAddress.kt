@@ -16,6 +16,8 @@ import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.AddressAdapter
 import com.example.shoppinggroceryapp.model.dao.UserDao
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.products.Category
+import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -25,7 +27,8 @@ import com.google.android.material.textfield.TextInputEditText
 class SavedAddress(var searchBar: LinearLayout) : Fragment() {
 
     private lateinit var addressRV:RecyclerView
-    private lateinit var db:UserDao
+    private lateinit var db:AppDatabase
+
     private lateinit var handler:Handler
     private lateinit var addressCount:TextView
     private lateinit var savedAddressToolbar:MaterialToolbar
@@ -42,10 +45,11 @@ class SavedAddress(var searchBar: LinearLayout) : Fragment() {
         savedAddressToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
-        db = AppDatabase.getAppDatabase(requireContext()).getUserDao()
+        db = AppDatabase.getAppDatabase(requireContext())
         val userId = MainActivity.userId.toInt()
         Thread{
-            val list = db.getAddressListForUser(userId)
+
+            val list = db.getUserDao().getAddressListForUser(userId)
             val count = "No of Saved Address: ${list.size}"
             handler.post {
                 addressCount.text = count

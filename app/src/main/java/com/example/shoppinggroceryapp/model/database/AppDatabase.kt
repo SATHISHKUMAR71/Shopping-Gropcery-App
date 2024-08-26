@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.shoppinggroceryapp.model.dao.ProductDao
 import com.example.shoppinggroceryapp.model.dao.RetailerDao
 import com.example.shoppinggroceryapp.model.dao.UserDao
 import com.example.shoppinggroceryapp.model.entities.deals.Deals
@@ -21,6 +22,7 @@ abstract class AppDatabase:RoomDatabase(){
 
     abstract fun getUserDao():UserDao
     abstract fun getRetailerDao():RetailerDao
+    abstract fun getProductDao():ProductDao
 
     companion object{
         @Volatile

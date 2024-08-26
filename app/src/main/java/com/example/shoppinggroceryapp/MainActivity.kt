@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
         userId = pref.getString("userId","userId").toString()
         userEmail = pref.getString("userEmail","userEmail").toString()
         userPhone = pref.getString("userPhone","userPhone").toString()
+
         if(boo){
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentBody,InitialFragment())
