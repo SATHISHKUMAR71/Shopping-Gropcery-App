@@ -63,7 +63,10 @@ class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
             Toast.makeText(context,"FAQ Clicked",Toast.LENGTH_SHORT).show()
         }
         savedAddress.setOnClickListener {
-            Toast.makeText(context,"Saved Address Clicked",Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,SavedAddress(searchBarTop))
+                .addToBackStack("Saved Address")
+                .commit()
         }
 
         logoutUser.setOnClickListener {

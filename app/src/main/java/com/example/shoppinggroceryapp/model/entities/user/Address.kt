@@ -15,6 +15,8 @@ data class Address (
     @PrimaryKey(autoGenerate = true)
     val addressId:Int,
     val userId:Int,
+    val addressContactName:String,
+    val addressContactNumber:String,
     val buildingName:String,
     val streetName:String,
     val city:String,

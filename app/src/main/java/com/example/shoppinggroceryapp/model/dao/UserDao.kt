@@ -25,11 +25,15 @@ interface UserDao {
     @Update
     fun updateUser(user: User)
 
+    @Query("SELECT * FROM Address WHERE (Address.userId=:userId)")
+    fun getAddressListForUser(userId:Int):List<Address>
+
     @Query("SELECT * FROM USER")
     fun getAllUsers():List<User>
 
     @Query("SELECT * FROM Address")
     fun getAllAddress():List<Address>
+
 
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone) AND (userPassword=:password))")
     fun getUser(emailOrPhone:String,password:String):User

@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var fragmentTopBarView:FrameLayout
     private lateinit var fragmentBottomBarView:FrameLayout
-    private lateinit var loginFragment: LoginFragment
     companion object{
         private const val REQUEST_CAMERA_PERMISSION = 200
         private val permissions = arrayOf(Manifest.permission.CAMERA)
@@ -29,7 +28,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        loginFragment = LoginFragment()
         println(supportFragmentManager.fragments)
         ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION)
 
@@ -47,9 +45,8 @@ class MainActivity : AppCompatActivity() {
         }
         else{
             supportFragmentManager.beginTransaction()
-                .add(R.id.fragmentBody,loginFragment)
+                .add(R.id.fragmentBody,LoginFragment())
                 .commit()
         }
-
     }
 }
