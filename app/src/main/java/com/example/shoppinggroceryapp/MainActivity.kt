@@ -18,6 +18,10 @@ class MainActivity : AppCompatActivity() {
     companion object{
         private const val REQUEST_CAMERA_PERMISSION = 200
         private val permissions = arrayOf(Manifest.permission.CAMERA)
+        var userName = ""
+        var userId = ""
+        var userEmail = ""
+        var userPhone = ""
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         val pref = getSharedPreferences("freshCart", Context.MODE_PRIVATE)
         val boo = pref.getBoolean("isSigned",false)
+        userName = pref.getString("userName","User").toString()
+        userId = pref.getString("userId","userId").toString()
+        userEmail = pref.getString("userEmail","userEmail").toString()
+        userPhone = pref.getString("userPhone","userPhone").toString()
         if(boo){
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentBody,InitialFragment())

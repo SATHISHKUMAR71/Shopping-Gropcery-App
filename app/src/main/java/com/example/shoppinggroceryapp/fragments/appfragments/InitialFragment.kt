@@ -1,11 +1,17 @@
 package com.example.shoppinggroceryapp.fragments.appfragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
+import com.example.shoppinggroceryapp.MainActivity.Companion.userEmail
+import com.example.shoppinggroceryapp.MainActivity.Companion.userId
+import com.example.shoppinggroceryapp.MainActivity.Companion.userName
+import com.example.shoppinggroceryapp.MainActivity.Companion.userPhone
 import com.example.shoppinggroceryapp.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
@@ -33,6 +39,13 @@ class InitialFragment : Fragment() {
         searchView = view.findViewById(R.id.searchView)
         searchView.setupWithSearchBar(searchBar)
 
+        val pref = requireActivity().getSharedPreferences("freshCart", Context.MODE_PRIVATE)
+        userName = pref.getString("userName","User").toString()
+        userId = pref.getString("userId","userId").toString()
+        userEmail = pref.getString("userEmail","userEmail").toString()
+        userPhone = pref.getString("userPhone","userPhone").toString()
+        val searchBarTop = view.findViewById<LinearLayout>(R.id.searchBarTop)
+
         parentFragmentManager.registerFragmentLifecycleCallbacks(object :FragmentManager.FragmentLifecycleCallbacks(){
             override fun onFragmentResumed(fm: FragmentManager, f: Fragment) {
                 super.onFragmentResumed(fm, f)
@@ -55,7 +68,7 @@ class InitialFragment : Fragment() {
             when(it.itemId){
                 R.id.account -> {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentMainLayout,AccountFragment())
+                        .replace(R.id.fragmentMainLayout,AccountFragment(searchBarTop))
                         .addToBackStack("Account Fragment")
                         .commit()
                 }
