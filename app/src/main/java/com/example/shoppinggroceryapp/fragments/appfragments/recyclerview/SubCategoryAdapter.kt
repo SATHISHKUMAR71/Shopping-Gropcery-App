@@ -12,6 +12,7 @@ import com.example.shoppinggroceryapp.model.entities.products.Category
 
 class SubCategoryAdapter(var context: Context,var categoryList: List<Category>):RecyclerView.Adapter<SubCategoryAdapter.SubcategoryHolder>() {
 
+    var size =0
     inner class SubcategoryHolder(itemView:View):RecyclerView.ViewHolder(itemView){
         val categoryName =itemView.findViewById<TextView>(R.id.subcategoryName)
     }
@@ -21,14 +22,22 @@ class SubCategoryAdapter(var context: Context,var categoryList: List<Category>):
     }
 
     override fun getItemCount(): Int {
-        return categoryList.size
+        size = categoryList.size
+        return if(size==0)1 else size
     }
 
     override fun onBindViewHolder(holder: SubcategoryHolder, position: Int) {
-        holder.categoryName.text = categoryList[position].categoryName
-        holder.itemView.setOnClickListener {
-            Toast.makeText(context,"Item Clicked",Toast.LENGTH_SHORT).show()
+        if(size == 0){
+            val text = "No Items in this Category"
+            holder.categoryName.text = text
         }
+        else{
+            holder.categoryName.text = categoryList[position].categoryName
+            holder.itemView.setOnClickListener {
+                Toast.makeText(context,"Item Clicked",Toast.LENGTH_SHORT).show()
+            }
+        }
+
     }
 
 
