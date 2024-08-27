@@ -29,13 +29,16 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginStart="30dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
                 android:layout_weight="1"
+                android:layout_gravity="center"
+                android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="10dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -57,7 +60,7 @@
                     android:text="Rice,Wheat,Oats,Barley,Millets,White Rice,White Flour,Pasta,Beans" />
 
             </LinearLayout>
-
+            </LinearLayout>
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"

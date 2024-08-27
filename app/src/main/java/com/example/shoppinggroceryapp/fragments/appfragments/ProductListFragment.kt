@@ -4,42 +4,34 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.ext.SdkExtensions
-import android.provider.ContactsContract.CommonDataKinds.Im
 import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
 import com.example.shoppinggroceryapp.model.database.AppDatabase
-import com.example.shoppinggroceryapp.model.entities.products.Images
 import com.example.shoppinggroceryapp.model.entities.products.Product
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 
 
-class ProductListFragment : Fragment() {
-
+class ProductListFragment(var category:String?) : Fragment() {
     companion object{
         var clickObserver = MutableLiveData<Product>()
         var position = 0
     }
+    private lateinit var fileDir:File
     private lateinit var selectedProduct: Product
     private var productList:MutableList<Product> = mutableListOf()
     override fun onCreateView(
@@ -50,6 +42,7 @@ class ProductListFragment : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_product_list, container, false)
         val productRV = view.findViewById<RecyclerView>(R.id.productListRecyclerView)
         val handler = Handler(Looper.getMainLooper())
+        fileDir = File(requireContext().filesDir,"AppImages")
         val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(
                 Build.VERSION_CODES.R) >= 2) {
             Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
@@ -70,9 +63,9 @@ class ProductListFragment : Fragment() {
                 val hash = image.hashCode().toString()
                 val bitMap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver,image)
 
-                val url = storeImageInApp(requireContext(),bitMap,hash)
+                storeImageInApp(requireContext(),bitMap,hash)
                 Thread{
-                    val p  = selectedProduct.copy(mainImage =url)
+                    val p  = selectedProduct.copy(mainImage = hash)
                     AppDatabase.getAppDatabase(context = requireContext()).getRetailerDao().updateProduct(
                         p
                     )
@@ -87,26 +80,36 @@ class ProductListFragment : Fragment() {
                 println(image)
             }
         }
-        Thread{
-            productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts()
-            handler.post {
-                productRV.adapter = ProductListAdapter(this,productList,launchImageForResult,intent)
-                productRV.layoutManager = LinearLayoutManager(requireContext())
-            }
-        }.start()
+        if(category==null){
+            Thread{
+                productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts().toMutableList()
+                handler.post {
+                    productRV.adapter = ProductListAdapter(this,productList,launchImageForResult,intent,fileDir)
+                    productRV.layoutManager = LinearLayoutManager(requireContext())
+                }
+            }.start()
+        }
+        else{
+            Thread{
+                productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
+                println("Product List: $productList")
+                handler.post {
+                    productRV.adapter = ProductListAdapter(this,productList,launchImageForResult,intent,fileDir)
+                    productRV.layoutManager = LinearLayoutManager(requireContext())
+                }
+            }.start()
+        }
 
 
         return view
     }
 
-    private fun storeImageInApp(context: Context,bitMap:Bitmap,fileName:String): String {
-        val fileDir = File(context.filesDir,"AppImages")
+    private fun storeImageInApp(context: Context,bitMap:Bitmap,fileName:String) {
         if(!fileDir.exists()){
             fileDir.mkdirs()
         }
         val bitmapFile = File(fileDir,fileName)
         val fileOutputStream = FileOutputStream(bitmapFile)
         bitMap.compress(Bitmap.CompressFormat.PNG,100,fileOutputStream)
-        return bitmapFile.absolutePath
     }
 }

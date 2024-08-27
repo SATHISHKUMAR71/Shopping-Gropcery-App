@@ -14,6 +14,10 @@ import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.products.BrandData
+import com.example.shoppinggroceryapp.model.entities.products.Category
+import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
+import com.example.shoppinggroceryapp.model.entities.products.Product
 
 
 class MainActivity : AppCompatActivity() {
@@ -60,10 +64,6 @@ class MainActivity : AppCompatActivity() {
                 100)
         }
 
-
-        Thread{
-            val list = AppDatabase.getAppDatabase(baseContext).getUserDao().getOnlyProducts()
-            println(list)
-        }.start()
+        val db = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
     }
 }

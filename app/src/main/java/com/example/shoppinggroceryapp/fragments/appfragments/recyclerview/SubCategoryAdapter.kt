@@ -41,12 +41,9 @@ class SubCategoryAdapter(var fragment: Fragment,var categoryList: List<Category>
         }
         holder.itemView.setOnClickListener {
             fragment.parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentMainLayout,ProductListFragment())
+                .replace(R.id.fragmentMainLayout,ProductListFragment(categoryList[position].categoryName))
                 .addToBackStack("Product List")
                 .commit()
         }
-
     }
-
-
 }

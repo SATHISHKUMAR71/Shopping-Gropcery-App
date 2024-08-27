@@ -35,13 +35,16 @@ interface UserDao {
     fun getAllAddress():List<Address>
 
     @Query("SELECT * FROM Product")
-    fun getOnlyProducts():MutableList<Product>
+    fun getOnlyProducts():List<Product>
 
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone) AND (userPassword=:password))")
     fun getUser(emailOrPhone:String,password:String):User
 
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone))")
     fun getUserData(emailOrPhone:String):User
+
+    @Query("SELECT * FROM Product WHERE(Product.categoryName =:query)")
+    fun getProductByCategory(query:String):List<Product>
 
     @Query("SELECT * FROM User JOIN Address ON User.userId = Address.userId WHERE User.userId=:id")
     fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>

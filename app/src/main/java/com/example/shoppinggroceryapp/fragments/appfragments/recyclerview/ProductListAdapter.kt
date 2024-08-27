@@ -28,8 +28,8 @@ import com.example.shoppinggroceryapp.model.entities.products.Images
 import com.example.shoppinggroceryapp.model.entities.products.Product
 import java.io.File
 
-class ProductListAdapter(var fragment: Fragment,var productList:List<Product>,var imageLauncher: ActivityResultLauncher<Intent>,
-    val intent: Intent):RecyclerView.Adapter<ProductListAdapter.ProductLargeImageHolder>() {
+class ProductListAdapter(var fragment: Fragment, private var productList:List<Product>, private var imageLauncher: ActivityResultLauncher<Intent>,
+                         private val intent: Intent,var file: File):RecyclerView.Adapter<ProductListAdapter.ProductLargeImageHolder>() {
 
 
 
@@ -60,10 +60,7 @@ class ProductListAdapter(var fragment: Fragment,var productList:List<Product>,va
         if(url.isNotEmpty()){
             println("Is URL NOT EMPTY")
             try{
-                val fileDir = File(fragment.requireContext().filesDir,"AppImages")
-                val bitmapFile = File(fileDir,"New Image")
-                println(bitmapFile.absolutePath)
-                val imagePath = File(url)
+                val imagePath = File(file,url)
                 println(imagePath.absolutePath)
                 val bitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
                 holder.productImage.setImageBitmap(bitmap)

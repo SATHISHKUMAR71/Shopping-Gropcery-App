@@ -27,7 +27,8 @@
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,13 +117,11 @@
             android:id="@+id/productAddButton"
             android:layout_width="136dp"
             android:layout_height="48dp"
-            android:layout_gravity="center"
             android:layout_marginBottom="10dp"
             android:background="@drawable/button_background"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/productPriceLong"
             app:layout_constraintTop_toBottomOf="@+id/productExpiryDate">
 
             <com.google.android.material.button.MaterialButton
@@ -134,26 +133,26 @@
                 app:iconGravity="end" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.TextButton"
                 android:id="@+id/addTextView"
+                style="@style/Widget.Material3.Button.TextButton"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="Add"
                 android:textColor="?attr/colorPrimary"
-                app:rippleColor="?attr/colorControlHighlight"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                app:rippleColor="?attr/colorControlHighlight" />
 
             <!--            <TextView-->
-<!--                android:id="@+id/addTextView"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="48dp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:text="Add"-->
-<!--                android:textAlignment="center"-->
-<!--                android:textColor="?attr/colorPrimary"-->
-<!--                android:textSize="16sp" />-->
+            <!--                android:id="@+id/addTextView"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="48dp"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:gravity="center"-->
+            <!--                android:text="Add"-->
+            <!--                android:textAlignment="center"-->
+            <!--                android:textColor="?attr/colorPrimary"-->
+            <!--                android:textSize="16sp" />-->
 
             <com.google.android.material.button.MaterialButton
                 style="@style/Widget.Material3.Button.TextButton"
