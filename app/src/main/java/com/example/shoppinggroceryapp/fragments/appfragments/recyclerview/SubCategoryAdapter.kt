@@ -6,11 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.ProductListFragment
 import com.example.shoppinggroceryapp.model.entities.products.Category
 
-class SubCategoryAdapter(var context: Context,var categoryList: List<Category>):RecyclerView.Adapter<SubCategoryAdapter.SubcategoryHolder>() {
+class SubCategoryAdapter(var fragment: Fragment,var categoryList: List<Category>):RecyclerView.Adapter<SubCategoryAdapter.SubcategoryHolder>() {
 
     var size =0
     inner class SubcategoryHolder(itemView:View):RecyclerView.ViewHolder(itemView){
@@ -34,8 +36,14 @@ class SubCategoryAdapter(var context: Context,var categoryList: List<Category>):
         else{
             holder.categoryName.text = categoryList[position].categoryName
             holder.itemView.setOnClickListener {
-                Toast.makeText(context,"Item Clicked",Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragment.context,"Item Clicked",Toast.LENGTH_SHORT).show()
             }
+        }
+        holder.itemView.setOnClickListener {
+            fragment.parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,ProductListFragment())
+                .addToBackStack("Product List")
+                .commit()
         }
 
     }

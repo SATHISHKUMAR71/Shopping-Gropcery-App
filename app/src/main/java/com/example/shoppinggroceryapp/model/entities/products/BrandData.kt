@@ -1,12 +1,13 @@
 package com.example.shoppinggroceryapp.model.entities.products
 
 import androidx.room.Dao
+import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Dao
+
+@Entity
 data class BrandData(
     @PrimaryKey(autoGenerate = true)
     var brandId:Long,
-    var brandName:String,
-    var productId:Long
+    var brandName:String
 )

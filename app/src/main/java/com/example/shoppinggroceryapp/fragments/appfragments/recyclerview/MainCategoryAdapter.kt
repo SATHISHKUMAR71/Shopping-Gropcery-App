@@ -13,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
@@ -21,7 +22,7 @@ import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
 
-class MainCategoryAdapter(var context: Context,var mainCategoryList: List<ParentCategory>):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
+class MainCategoryAdapter(var fragment: Fragment,var mainCategoryList: List<ParentCategory>):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
 
     private var expandedData = mutableSetOf<Int>()
     inner class MainCategoryHolder(mainCategoryView:View):RecyclerView.ViewHolder(mainCategoryView){
@@ -45,38 +46,12 @@ class MainCategoryAdapter(var context: Context,var mainCategoryList: List<Parent
         holder.parentCategoryName.text = mainCategoryList[position].parentCategoryName
         holder.parentCategoryDescription.text = mainCategoryList[position].parentCategoryDescription
         println("IS VISIBLE: ${holder.invisibleView.isVisible} $position ${expandedData.contains(position)} $expandedData")
-        if(expandedData.contains(position)){
-            holder.invisibleView.visibility = View.VISIBLE
-            holder.addSymbol.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.remove_24px
-                )
-            )
-            Thread {
-                val handler = Handler(Looper.getMainLooper())
-                println("Thread Started IN ELSE:")
-                val categoryList = AppDatabase.getAppDatabase(context).getProductDao()
-                    .getChildCategoryList(mainCategoryList[position].parentCategoryName)
-                handler.post {
-                    holder.invisibleView.adapter = SubCategoryAdapter(context, categoryList)
-                    holder.invisibleView.layoutManager = LinearLayoutManager(context)
-                }
-            }.start()
+        refreshViews(fragment.requireContext(),position,holder)
 
-        }
-        else{
-            holder.addSymbol.setImageDrawable(
-                ContextCompat.getDrawable(
-                    context,
-                    R.drawable.add_24px
-                )
-            )
-            holder.invisibleView.visibility = View.GONE
-        }
         holder.itemView.setOnClickListener {
             if (holder.adapterPosition == position) {
                 if (holder.invisibleView.isVisible) {
+//                    Animation for the Visibility GONE
 //                    TransitionManager.beginDelayedTransition(holder.invisibleView,AutoTransition())
                     holder.invisibleView.animate()
                         .alpha(0f)
@@ -87,27 +62,27 @@ class MainCategoryAdapter(var context: Context,var mainCategoryList: List<Parent
                             holder.invisibleView.visibility = View.GONE
                             holder.addSymbol.setImageDrawable(
                                 ContextCompat.getDrawable(
-                                    context,
+                                    fragment.requireContext(),
                                     R.drawable.add_24px
                                 )
                             )
                         }
                 } else {
                     val handler = Handler(Looper.getMainLooper())
+//                    For The SubCategory Adapter List
                     Thread {
-                        println("Thread Started:")
-                        val categoryList = AppDatabase.getAppDatabase(context).getProductDao()
+                        val categoryList = AppDatabase.getAppDatabase(fragment.requireContext()).getProductDao()
                             .getChildCategoryList(mainCategoryList[position].parentCategoryName)
-                        println("IS VISIBLE: $categoryList")
                         handler.post {
                             holder.addSymbol.setImageDrawable(
                                 ContextCompat.getDrawable(
-                                    context,
+                                    fragment.requireContext(),
                                     R.drawable.remove_24px
                                 )
                             )
-                            holder.invisibleView.adapter = SubCategoryAdapter(context, categoryList)
-                            holder.invisibleView.layoutManager = LinearLayoutManager(context)
+                            holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList)
+                            holder.invisibleView.layoutManager = LinearLayoutManager(fragment.requireContext())
+//                            Animation for the View
 //                    TransitionManager.beginDelayedTransition(holder.invisibleView,AutoTransition())
                             holder.invisibleView.visibility = View.VISIBLE
                             holder.invisibleView.alpha = 0f
@@ -123,6 +98,37 @@ class MainCategoryAdapter(var context: Context,var mainCategoryList: List<Parent
             }
         }
 
+    }
+
+    private fun refreshViews(context: Context, position: Int,holder: MainCategoryHolder) {
+        if(expandedData.contains(position)){
+            holder.invisibleView.visibility = View.VISIBLE
+            holder.addSymbol.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.remove_24px
+                )
+            )
+            Thread {
+                val handler = Handler(Looper.getMainLooper())
+                val categoryList = AppDatabase.getAppDatabase(context).getProductDao()
+                    .getChildCategoryList(mainCategoryList[position].parentCategoryName)
+                handler.post {
+                    holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList)
+                    holder.invisibleView.layoutManager = LinearLayoutManager(context)
+                }
+            }.start()
+
+        }
+        else{
+            holder.addSymbol.setImageDrawable(
+                ContextCompat.getDrawable(
+                    context,
+                    R.drawable.add_24px
+                )
+            )
+            holder.invisibleView.visibility = View.GONE
+        }
     }
 
 }

@@ -31,10 +31,11 @@ class CategoryFragment() : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_category, container, false)
         val handler = Handler(Looper.getMainLooper())
         mainCategoryRV = view.findViewById(R.id.categoryRecyclerView)
+
         Thread{
             val parentList = AppDatabase.getAppDatabase(requireContext()).getProductDao().getParentCategoryList()
             handler.post {
-                mainCategoryRV.adapter = MainCategoryAdapter(requireContext(),parentList)
+                mainCategoryRV.adapter = MainCategoryAdapter(this,parentList)
                 mainCategoryRV.layoutManager = LinearLayoutManager(requireContext())
             }
         }.start()

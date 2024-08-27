@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
 data class Product(
     @PrimaryKey(autoGenerate = true)
     val productId:Long,
+    val brandId:Long,
     val categoryName:String,
     val productName:String,
     val productDescription:String,

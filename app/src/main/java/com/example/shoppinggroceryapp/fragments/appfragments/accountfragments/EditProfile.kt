@@ -14,6 +14,10 @@ import androidx.core.view.isVisible
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.products.BrandData
+import com.example.shoppinggroceryapp.model.entities.products.Category
+import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
+import com.example.shoppinggroceryapp.model.entities.products.Product
 import com.example.shoppinggroceryapp.model.entities.user.User
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
@@ -58,7 +62,7 @@ class EditProfile(val searchBarTop:LinearLayout) : Fragment() {
 
         saveDetails.setOnClickListener {
 
-            println("${MainActivity.userEmail}")
+            println("$MainActivity.userEmail")
             val oldEmail = MainActivity.userEmail
             MainActivity.userEmail = email.text.toString()
             MainActivity.userPhone = phone.text.toString()

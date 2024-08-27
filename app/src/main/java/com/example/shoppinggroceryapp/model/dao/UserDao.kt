@@ -34,6 +34,8 @@ interface UserDao {
     @Query("SELECT * FROM Address")
     fun getAllAddress():List<Address>
 
+    @Query("SELECT * FROM Product")
+    fun getOnlyProducts():MutableList<Product>
 
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone) AND (userPassword=:password))")
     fun getUser(emailOrPhone:String,password:String):User
@@ -45,5 +47,5 @@ interface UserDao {
     fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>
 
     @Query("SELECT Product.*,Category.parentCategoryName,Category.categoryDescription FROM Product JOIN Category ON Product.categoryName=Category.categoryName")
-    fun getProducts():Map<Product,Category>
+    fun getProducts():Map<Category,List<Product>>
 }

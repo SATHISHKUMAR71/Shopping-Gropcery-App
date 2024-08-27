@@ -2,13 +2,18 @@ package com.example.shoppinggroceryapp
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
+import com.example.shoppinggroceryapp.model.database.AppDatabase
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         var userPhone = ""
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,7 +44,6 @@ class MainActivity : AppCompatActivity() {
         userId = pref.getString("userId","userId").toString()
         userEmail = pref.getString("userEmail","userEmail").toString()
         userPhone = pref.getString("userPhone","userPhone").toString()
-
         if(boo){
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fragmentBody,InitialFragment())
@@ -49,5 +54,16 @@ class MainActivity : AppCompatActivity() {
                 .add(R.id.fragmentBody,LoginFragment())
                 .commit()
         }
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                100)
+        }
+
+
+        Thread{
+            val list = AppDatabase.getAppDatabase(baseContext).getUserDao().getOnlyProducts()
+            println(list)
+        }.start()
     }
 }
