@@ -87,7 +87,7 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
                 }
             }.start()
             if(productList[position].offer!="-1"){
-                val str = "MRP "+productList[position].price
+                val str = "MRP ₹"+productList[position].price
                 holder.productMrpText.text = str
                 holder.productMrpText.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
                 holder.productMrpText.visibility = View.VISIBLE

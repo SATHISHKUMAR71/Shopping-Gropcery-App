@@ -65,7 +65,7 @@ class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: 
                             holder.addSymbol.setImageDrawable(
                                 ContextCompat.getDrawable(
                                     fragment.requireContext(),
-                                    R.drawable.add_24px
+                                    R.drawable.add_control
                                 )
                             )
                         }
@@ -79,7 +79,7 @@ class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: 
                             holder.addSymbol.setImageDrawable(
                                 ContextCompat.getDrawable(
                                     fragment.requireContext(),
-                                    R.drawable.remove_24px
+                                    R.drawable.remove_control
                                 )
                             )
                             holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList,searchBarTop, bottomNav )
@@ -108,7 +108,7 @@ class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: 
             holder.addSymbol.setImageDrawable(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.remove_24px
+                    R.drawable.remove_control
                 )
             )
             Thread {
@@ -126,7 +126,7 @@ class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: 
             holder.addSymbol.setImageDrawable(
                 ContextCompat.getDrawable(
                     context,
-                    R.drawable.add_24px
+                    R.drawable.add_control
                 )
             )
             holder.invisibleView.visibility = View.GONE
