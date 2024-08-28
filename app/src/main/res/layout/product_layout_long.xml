@@ -132,58 +132,89 @@
             app:layout_constraintTop_toBottomOf="@+id/productExpiryDate" />
 
         <LinearLayout
-            android:id="@+id/productAddButton"
-            android:layout_width="136dp"
-            android:layout_height="48dp"
+            android:visibility="gone"
+            android:id="@+id/productAddRemoveLayout"
+            android:layout_width="130dp"
+            android:layout_height="50dp"
             android:layout_marginBottom="10dp"
-            android:background="@drawable/button_background"
             android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/productExpiryDate">
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="40dp"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:id="@+id/productRemoveSymbolButton"
                 app:cornerRadius="2dp"
-                app:icon="@drawable/remove_24px"
-                app:iconGravity="end" />
+                app:rippleColor="?attr/colorControlHighlight"
+                app:icon="@drawable/remove_24px" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/addTextView"
-                style="@style/Widget.Material3.Button.TextButton"
+            <TextView
+                android:id="@+id/totalItemsAdded"
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Add"
+                android:text="0"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textAlignment="center"
                 android:textColor="?attr/colorPrimary"
-                android:textSize="14sp"
-                app:rippleColor="?attr/colorControlHighlight" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/addTextView"-->
-            <!--                android:layout_width="0dp"-->
-            <!--                android:layout_height="48dp"-->
-            <!--                android:layout_weight="1"-->
-            <!--                android:gravity="center"-->
-            <!--                android:text="Add"-->
-            <!--                android:textAlignment="center"-->
-            <!--                android:textColor="?attr/colorPrimary"-->
-            <!--                android:textSize="16sp" />-->
+                android:textSize="16sp" />
 
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="40dp"
+                android:id="@+id/productAddSymbolButton"
+                style="@style/Widget.Material3.Button.TonalButton.Icon"
+                android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:backgroundTint="?attr/colorSecondaryContainer"
                 app:cornerRadius="2dp"
-                app:icon="@drawable/add_24px"
-                app:iconGravity="start" />
+                app:icon="@drawable/add_24px"/>
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/productAddLayoutOneTime"
+            android:layout_width="130dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_background"
+            android:orientation="horizontal"
+            android:clickable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/productExpiryDate">
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/productAddTextButtonOneTime"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="0dp"
+                        android:layout_height="53dp"
+                        android:layout_marginTop="-3dp"
+                        android:layout_marginBottom="-3dp"
+                        android:layout_weight="1"
+                        app:cornerRadius="0dp"
+                        android:clickable="false"
+                        android:text="Add"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="14sp" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/productAddSymbolButtonOneTime"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="2dp"
+                android:layout_marginTop="-3dp"
+                android:layout_marginBottom="-3dp"
+                android:backgroundTint="?attr/colorSecondaryContainer"
+                android:clickable="false"
+                app:cornerRadius="4dp"
+                app:icon="@drawable/add_24px"
+                app:iconGravity="start" />
+        </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-</LinearLayout>
+        </LinearLayout>

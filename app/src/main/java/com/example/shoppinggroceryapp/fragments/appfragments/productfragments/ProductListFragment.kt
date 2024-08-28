@@ -19,9 +19,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
+import com.example.shoppinggroceryapp.model.dao.UserDao
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.order.Cart
 import com.example.shoppinggroceryapp.model.entities.products.Product
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.File
@@ -36,6 +39,15 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
     private lateinit var fileDir:File
     private lateinit var selectedProduct: Product
     private var productList:MutableList<Product> = mutableListOf()
+    private lateinit var userCartList:MutableList<Cart>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Thread{
+            userCartList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getCartItems(MainActivity.cartId).toMutableList()
+        }.start()
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -45,6 +57,8 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         val productRV = view.findViewById<RecyclerView>(R.id.productListRecyclerView)
         val handler = Handler(Looper.getMainLooper())
         fileDir = File(requireContext().filesDir,"AppImages")
+
+
         val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(
                 Build.VERSION_CODES.R) >= 2) {
             Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
@@ -53,40 +67,12 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         } else {
             Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         }
-        clickObserver.observe(viewLifecycleOwner){
-            if(it!=null){
-                selectedProduct = it
-            }
-        }
-
-        val launchImageForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-            if(result.resultCode == Activity.RESULT_OK){
-                val image = result.data?.data
-                val hash = image.hashCode().toString()
-                val bitMap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver,image)
-
-                storeImageInApp(requireContext(),bitMap,hash)
-                Thread{
-                    val p  = selectedProduct.copy(mainImage = hash)
-                    AppDatabase.getAppDatabase(context = requireContext()).getRetailerDao().updateProduct(
-                        p
-                    )
-                    handler.post {
-                        println("$position ${productRV.adapter}")
-                        productList.removeAt(position)
-                        productList.add(position,p)
-                        productRV.adapter?.notifyItemChanged(position)
-                    }
-                    println("PRODUCT UPDATED: $p")
-                }.start()
-                println(image)
-            }
-        }
         if(category==null){
             Thread{
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts().toMutableList()
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav)
+                    productRV.adapter = ProductListAdapter(this,productList,userCartList,fileDir,searchbarTop,bottomNav)
+                    println(productList)
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
             }.start()
@@ -96,7 +82,8 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
                 println("Product List: $productList")
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav)
+                    productRV.adapter = ProductListAdapter(this,productList,userCartList,fileDir,searchbarTop,bottomNav)
+                    println("User cart List: $userCartList")
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
             }.start()
@@ -117,9 +104,11 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
     override fun onResume() {
         super.onResume()
         searchbarTop.visibility = View.GONE
+        bottomNav.visibility = View.GONE
     }
     override fun onStop() {
         super.onStop()
         searchbarTop.visibility = View.VISIBLE
+        bottomNav.visibility = View.VISIBLE
     }
 }

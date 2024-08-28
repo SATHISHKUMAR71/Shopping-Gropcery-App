@@ -34,7 +34,7 @@ class OfferFragment(var searchbarTop:LinearLayout,var bottomNav:BottomNavigation
         Thread{
             val offeredProductList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOfferedProducts()
             MainActivity.handler.post {
-                offerList.adapter = ProductListAdapter(this,offeredProductList,fileDir,searchbarTop,bottomNav)
+                offerList.adapter = ProductListAdapter(this,offeredProductList,null,fileDir,searchbarTop,bottomNav)
                 offerList.layoutManager = LinearLayoutManager(context)
             }
         }.start()

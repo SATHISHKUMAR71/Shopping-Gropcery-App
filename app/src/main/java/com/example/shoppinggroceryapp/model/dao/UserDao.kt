@@ -1,10 +1,13 @@
 package com.example.shoppinggroceryapp.model.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.shoppinggroceryapp.model.entities.order.Cart
+import com.example.shoppinggroceryapp.model.entities.order.CartMapping
 import com.example.shoppinggroceryapp.model.entities.products.Category
 import com.example.shoppinggroceryapp.model.entities.products.Product
 import com.example.shoppinggroceryapp.model.entities.products.ProductWithCategory
@@ -54,4 +57,26 @@ interface UserDao {
 
     @Query("SELECT Product.*,Category.parentCategoryName,Category.categoryDescription FROM Product JOIN Category ON Product.categoryName=Category.categoryName")
     fun getProducts():Map<Category,List<Product>>
+
+    @Query("SELECT * FROM CartMapping WHERE CartMapping.userId=:userId and CartMapping.status='available'")
+    fun getCartForUser(userId:Int):CartMapping
+
+    @Insert
+    fun addCartForUser(cartMapping:CartMapping)
+
+    @Query("SELECT * FROM Cart WHERE Cart.cartId=:cartId")
+    fun getCartItems(cartId:Int):List<Cart>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun addItemsToCart(cart:Cart)
+
+
+    @Delete
+    fun removeProductInCart(cart: Cart)
+
+    @Query("SELECT * FROM Cart WHERE Cart.cartId=:cartId and Cart.productId=:productId")
+    fun getSpecificCart(cartId:Int,productId:Int):Cart
+    @Update
+    fun updateCartItems(cart: Cart)
+
 }

@@ -16,6 +16,7 @@ import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.fragments.authentication.LoginFragment
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.order.CartMapping
 import com.example.shoppinggroceryapp.model.entities.products.BrandData
 import com.example.shoppinggroceryapp.model.entities.products.Category
 import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
         var userId = ""
         var userEmail = ""
         var userPhone = ""
+        var cartId = 0
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -67,7 +69,19 @@ class MainActivity : AppCompatActivity() {
                 100)
         }
 
-        val db = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
+//        val db = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
+        val db = AppDatabase.getAppDatabase(baseContext).getUserDao()
 
+        Thread{
+            val cart:CartMapping? = db.getCartForUser(userId.toInt())
+            if(cart==null){
+                db.addCartForUser(CartMapping(0, userId = userId.toInt(),"available"))
+            }
+            else{
+                println("Cart is Already available for the user $cart")
+                cartId = cart.cartId
+                println(db.getCartItems(cartId))
+            }
+        }.start()
     }
 }
