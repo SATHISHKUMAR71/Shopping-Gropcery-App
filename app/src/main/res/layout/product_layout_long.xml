@@ -12,11 +12,28 @@
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="10dp"
-        android:orientation="horizontal"
+        android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <TextView
+                android:id="@+id/offerText"
+                android:background="@color/offerColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:textSize="12sp"
+                android:text="20% Offer"/>
         <ImageView
             android:id="@+id/productImageLong"
             android:layout_width="100dp"
@@ -24,6 +41,7 @@
             android:layout_gravity="center"
             android:src="@drawable/gram_pulses"
             android:scaleType="centerCrop" />
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

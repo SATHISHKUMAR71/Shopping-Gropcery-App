@@ -43,6 +43,9 @@ interface UserDao {
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone))")
     fun getUserData(emailOrPhone:String):User
 
+    @Query("SELECT * FROM Product WHERE Product.offer!='-1'")
+    fun getOfferedProducts():List<Product>
+
     @Query("SELECT * FROM Product WHERE(Product.categoryName =:query)")
     fun getProductByCategory(query:String):List<Product>
 

@@ -1,4 +1,4 @@
-package com.example.shoppinggroceryapp.fragments.appfragments
+package com.example.shoppinggroceryapp.fragments.appfragments.productfragments
 
 import android.app.Activity
 import android.content.Context
@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,11 +23,12 @@ import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
 import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.products.Product
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.io.File
 import java.io.FileOutputStream
 
 
-class ProductListFragment(var category:String?) : Fragment() {
+class ProductListFragment(var category:String?, private var searchbarTop:LinearLayout, private var bottomNav: BottomNavigationView) : Fragment() {
     companion object{
         var clickObserver = MutableLiveData<Product>()
         var position = 0
@@ -84,7 +86,7 @@ class ProductListFragment(var category:String?) : Fragment() {
             Thread{
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts().toMutableList()
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,launchImageForResult,intent,fileDir)
+                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav)
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
             }.start()
@@ -94,7 +96,7 @@ class ProductListFragment(var category:String?) : Fragment() {
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
                 println("Product List: $productList")
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,launchImageForResult,intent,fileDir)
+                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav)
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
             }.start()
@@ -111,5 +113,13 @@ class ProductListFragment(var category:String?) : Fragment() {
         val bitmapFile = File(fileDir,fileName)
         val fileOutputStream = FileOutputStream(bitmapFile)
         bitMap.compress(Bitmap.CompressFormat.PNG,100,fileOutputStream)
+    }
+    override fun onResume() {
+        super.onResume()
+        searchbarTop.visibility = View.GONE
+    }
+    override fun onStop() {
+        super.onStop()
+        searchbarTop.visibility = View.VISIBLE
     }
 }

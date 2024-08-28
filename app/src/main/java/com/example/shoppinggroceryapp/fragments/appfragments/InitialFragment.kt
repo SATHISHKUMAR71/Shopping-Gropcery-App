@@ -95,13 +95,13 @@ class InitialFragment : Fragment() {
                 }
                 R.id.offer -> {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentMainLayout,OfferFragment())
+                        .replace(R.id.fragmentMainLayout,OfferFragment(searchBarTop,bottomNav))
                         .addToBackStack("Offer Fragment")
                         .commit()
                 }
                 R.id.category -> {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentMainLayout,CategoryFragment())
+                        .replace(R.id.fragmentMainLayout,CategoryFragment(searchBarTop,bottomNav))
                         .addToBackStack("Category Fragment")
                         .commit()
                 }

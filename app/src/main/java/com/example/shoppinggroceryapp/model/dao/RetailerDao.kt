@@ -32,6 +32,9 @@ interface RetailerDao:UserDao {
     @Delete
     fun deleteProduct(product: Product)
 
+    @Query("SELECT BrandData.brandName FROM BrandData where BrandData.brandId=:id")
+    fun getBrandName(id:Long):String
+
     @Query("SELECT * FROM ParentCategory WHERE ParentCategory.parentCategoryName=:parentCategoryName")
     fun getParentCategory(parentCategoryName:String):ParentCategory
 

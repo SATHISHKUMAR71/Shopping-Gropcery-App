@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.FrameLayout
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fragmentTopBarView:FrameLayout
     private lateinit var fragmentBottomBarView:FrameLayout
     companion object{
+        val handler = Handler(Looper.getMainLooper())
         private const val REQUEST_CAMERA_PERMISSION = 200
         private val permissions = arrayOf(Manifest.permission.CAMERA)
         var userFirstName = ""
@@ -65,5 +68,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         val db = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
+
     }
 }

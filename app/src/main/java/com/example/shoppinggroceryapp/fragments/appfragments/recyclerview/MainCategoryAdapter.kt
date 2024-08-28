@@ -21,8 +21,10 @@ import androidx.transition.TransitionManager
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.products.ParentCategory
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class MainCategoryAdapter(var fragment: Fragment,var mainCategoryList: List<ParentCategory>):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
+class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: List<ParentCategory>,
+                          private var searchBarTop:LinearLayout, private var bottomNav: BottomNavigationView):RecyclerView.Adapter<MainCategoryAdapter.MainCategoryHolder>() {
 
     private var expandedData = mutableSetOf<Int>()
     inner class MainCategoryHolder(mainCategoryView:View):RecyclerView.ViewHolder(mainCategoryView){
@@ -80,7 +82,7 @@ class MainCategoryAdapter(var fragment: Fragment,var mainCategoryList: List<Pare
                                     R.drawable.remove_24px
                                 )
                             )
-                            holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList)
+                            holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList,searchBarTop, bottomNav )
                             holder.invisibleView.layoutManager = LinearLayoutManager(fragment.requireContext())
 //                            Animation for the View
 //                    TransitionManager.beginDelayedTransition(holder.invisibleView,AutoTransition())
@@ -114,7 +116,7 @@ class MainCategoryAdapter(var fragment: Fragment,var mainCategoryList: List<Pare
                 val categoryList = AppDatabase.getAppDatabase(context).getProductDao()
                     .getChildCategoryList(mainCategoryList[position].parentCategoryName)
                 handler.post {
-                    holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList)
+                    holder.invisibleView.adapter = SubCategoryAdapter(fragment, categoryList,searchBarTop,bottomNav)
                     holder.invisibleView.layoutManager = LinearLayoutManager(context)
                 }
             }.start()

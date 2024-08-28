@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.R
@@ -15,7 +16,7 @@ import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
-class CategoryFragment() : Fragment() {
+class CategoryFragment(private var searchbarTop: LinearLayout, private var bottomNav:BottomNavigationView) : Fragment() {
 
     private lateinit var mainCategoryRV:RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +36,19 @@ class CategoryFragment() : Fragment() {
         Thread{
             val parentList = AppDatabase.getAppDatabase(requireContext()).getProductDao().getParentCategoryList()
             handler.post {
-                mainCategoryRV.adapter = MainCategoryAdapter(this,parentList)
+                mainCategoryRV.adapter = MainCategoryAdapter(this,parentList,searchbarTop,bottomNav)
                 mainCategoryRV.layoutManager = LinearLayoutManager(requireContext())
             }
         }.start()
 
         return view
+    }
+    override fun onResume() {
+        super.onResume()
+        searchbarTop.visibility = View.GONE
+    }
+    override fun onStop() {
+        super.onStop()
+        searchbarTop.visibility = View.VISIBLE
     }
 }

@@ -16,7 +16,7 @@ import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.google.android.material.button.MaterialButton
 
-class AccountFragment(val searchBarTop:LinearLayout) : Fragment() {
+class AccountFragment(private val searchBarTop:LinearLayout) : Fragment() {
 
 
     private lateinit var editProfile:MaterialButton
