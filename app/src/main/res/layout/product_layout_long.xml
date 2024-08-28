@@ -143,9 +143,10 @@
             app:layout_constraintTop_toBottomOf="@+id/productExpiryDate">
 
             <com.google.android.material.button.MaterialButton
-                android:backgroundTint="?attr/colorSecondaryContainer"
                 style="@style/Widget.Material3.Button.TonalButton.Icon"
                 android:layout_width="48dp"
+                app:iconTint="?attr/colorOnPrimary"
+                android:backgroundTint="?attr/colorPrimaryDark"
                 android:layout_height="48dp"
                 android:id="@+id/productRemoveSymbolButton"
                 app:cornerRadius="2dp"
@@ -166,10 +167,11 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/productAddSymbolButton"
+                app:iconTint="?attr/colorOnPrimary"
+                android:backgroundTint="?attr/colorPrimaryDark"
                 style="@style/Widget.Material3.Button.TonalButton.Icon"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:backgroundTint="?attr/colorSecondaryContainer"
                 app:cornerRadius="2dp"
                 app:icon="@drawable/add_24px"/>
 
@@ -207,7 +209,8 @@
                 android:layout_marginEnd="2dp"
                 android:layout_marginTop="-3dp"
                 android:layout_marginBottom="-3dp"
-                android:backgroundTint="?attr/colorSecondaryContainer"
+                app:iconTint="?attr/colorOnPrimary"
+                android:backgroundTint="?attr/colorPrimaryDark"
                 android:clickable="false"
                 app:cornerRadius="4dp"
                 app:icon="@drawable/add_24px"

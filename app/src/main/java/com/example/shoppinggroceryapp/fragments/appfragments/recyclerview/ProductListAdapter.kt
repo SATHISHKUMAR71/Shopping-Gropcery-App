@@ -30,6 +30,7 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
 
                              private var userDb:UserDao =
                                  AppDatabase.getAppDatabase(fragment.requireContext()).getUserDao()
+
     var size = 0
     inner class ProductLargeImageHolder(productLargeView:View):RecyclerView.ViewHolder(productLargeView){
         val productImage = productLargeView.findViewById<ImageView>(R.id.productImageLong)
@@ -58,6 +59,17 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
 
     override fun onBindViewHolder(holder: ProductLargeImageHolder, position: Int) {
         println("**** On PRODUCT LIST ADAPTER")
+
+        Thread{
+            val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
+            if(cart!=null){
+                MainActivity.handler.post {
+                    holder.productAddOneTime.visibility = View.GONE
+                    holder.productAddRemoveLayout.visibility = View.VISIBLE
+                    holder.totalItems.text = cart.totalItems.toString()
+                }
+            }
+        }.start()
         if(size==0){
             Toast.makeText(fragment.requireContext(),"No Items in this Category",Toast.LENGTH_SHORT).show()
         }
@@ -84,7 +96,6 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
             holder.productPrice.text = price
             val url = (productList[position].mainImage)
             if(url.isNotEmpty()){
-                println("Is URL NOT EMPTY")
                 try{
                     val imagePath = File(file,url)
                     println(imagePath.absolutePath)
