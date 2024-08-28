@@ -27,13 +27,14 @@ import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.order.Cart
 import com.example.shoppinggroceryapp.model.entities.products.Product
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.button.MaterialButton
 import java.io.File
 import java.io.FileOutputStream
 
 
 class ProductListFragment(var category:String?, private var searchbarTop:LinearLayout, private var bottomNav: BottomNavigationView) : Fragment() {
     companion object{
-        var clickObserver = MutableLiveData<Product>()
+        var totalCost:MutableLiveData<Float> = MutableLiveData(0f)
         var position = 0
     }
     private lateinit var fileDir:File
@@ -56,9 +57,25 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         val view =  inflater.inflate(R.layout.fragment_product_list, container, false)
         val productRV = view.findViewById<RecyclerView>(R.id.productListRecyclerView)
         val handler = Handler(Looper.getMainLooper())
+        val totalCostButton = view.findViewById<MaterialButton>(R.id.totalPriceWorthInCart)
+
+        totalCost.observe(viewLifecycleOwner){
+            val str ="₹"+ (it?:0).toString()
+            totalCostButton.text =str
+        }
+        var userDb:UserDao = AppDatabase.getAppDatabase(requireContext()).getUserDao()
         fileDir = File(requireContext().filesDir,"AppImages")
 
-
+        Thread{
+            val list = userDb.getCartItems(MainActivity.cartId)
+            for(cart in list){
+                val totalItems = cart.totalItems
+                val price = cart.unitPrice
+                MainActivity.handler.post {
+                    totalCost.value =totalCost.value!!+(totalItems * price)
+                }
+            }
+        }.start()
         val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && SdkExtensions.getExtensionVersion(
                 Build.VERSION_CODES.R) >= 2) {
             Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
