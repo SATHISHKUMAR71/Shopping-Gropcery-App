@@ -45,15 +45,17 @@ class SavedAddress(var searchBar: LinearLayout) : Fragment() {
         savedAddressToolbar.setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
+        if(arguments?.getBoolean("clickable")==true){
+            AddressAdapter.clickable = true
+        }
         db = AppDatabase.getAppDatabase(requireContext())
         val userId = MainActivity.userId.toInt()
         Thread{
-
             val list = db.getUserDao().getAddressListForUser(userId)
             val count = "No of Saved Address: ${list.size}"
             handler.post {
                 addressCount.text = count
-                addressRV.adapter = AddressAdapter(list)
+                addressRV.adapter = AddressAdapter(list,this)
                 addressRV.layoutManager = LinearLayoutManager(context)
             }
         }.start()
