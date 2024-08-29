@@ -56,6 +56,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.7")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
+        implementation("androidx.recyclerview:recyclerview:1.3.2")
+        // For control over item selection of both touch and mouse driven selection
+        implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
+
     // Coroutine Lifecycle Scopes
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.2.0")

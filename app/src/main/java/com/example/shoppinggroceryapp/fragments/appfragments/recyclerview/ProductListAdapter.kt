@@ -12,10 +12,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.CartFragment
+import com.example.shoppinggroceryapp.fragments.appfragments.diffutil.CartItemsDiffUtil
 import com.example.shoppinggroceryapp.fragments.appfragments.productfragments.ProductDetailFragment
 import com.example.shoppinggroceryapp.fragments.appfragments.productfragments.ProductListFragment
 import com.example.shoppinggroceryapp.model.dao.UserDao
@@ -66,12 +68,13 @@ class ProductListAdapter(var fragment: Fragment, private var productList:Mutable
     }
 
     override fun onBindViewHolder(holder: ProductLargeImageHolder, position: Int) {
-        println("**** On PRODUCT LIST ADAPTER $tag")
+        println("**** On PRODUCT LIST ADAPTER $tag $size")
         if(size==0){
             Toast.makeText(fragment.requireContext(),"No Items in this Category",Toast.LENGTH_SHORT).show()
         }
         else{
             Thread{
+                println("**** In Thread$productList $position ${holder.absoluteAdapterPosition}")
                 val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
                 println("AT Thread DATAS")
                 if(cart!=null){
@@ -255,5 +258,18 @@ class ProductListAdapter(var fragment: Fragment, private var productList:Mutable
                     holder.productAddOneTime.visibility = View.GONE
                 }
             }
+    }
+
+    fun setProducts(newList:List<Product>){
+        println("Set Products Called")
+        val diffUtil = CartItemsDiffUtil(productList,newList)
+        countList.clear()
+        for(i in 0..newList.size){
+            countList.add(i,0)
+        }
+        productList.clear()
+        productList.addAll(newList)
+        val diffResults = DiffUtil.calculateDiff(diffUtil)
+        diffResults.dispatchUpdatesTo(this)
     }
 }

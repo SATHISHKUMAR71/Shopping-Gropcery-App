@@ -97,6 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:visibility="gone"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout11"
         tools:layout_editor_absoluteX="20dp">
