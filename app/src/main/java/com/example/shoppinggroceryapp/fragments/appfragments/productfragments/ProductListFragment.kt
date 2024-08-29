@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductAdapter2
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
 import com.example.shoppinggroceryapp.model.dao.UserDao
 import com.example.shoppinggroceryapp.model.database.AppDatabase
@@ -79,13 +80,15 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         } else {
             Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         }
+
+        val adapter=ProductListAdapter(this,fileDir,searchbarTop,bottomNav,"P")
         if(category==null){
             Thread{
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts().toMutableList()
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav,"P")
-                    println(productList)
+                    productRV.adapter = adapter
                     productRV.layoutManager = LinearLayoutManager(requireContext())
+                    adapter.setProducts(productList)
                 }
             }.start()
         }
@@ -94,8 +97,9 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
                 println("Product List: $productList")
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav,"P")
+                    productRV.adapter = adapter
                     productRV.layoutManager = LinearLayoutManager(requireContext())
+                    adapter.setProducts(productList)
                 }
             }.start()
         }

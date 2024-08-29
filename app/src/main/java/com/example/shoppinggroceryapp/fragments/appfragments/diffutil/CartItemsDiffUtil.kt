@@ -15,8 +15,8 @@ class CartItemsDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        println("**** Cart ${oldList[oldItemPosition] == newList[newItemPosition]}")
-        return oldList[oldItemPosition].productId == newList[newItemPosition].productId
+        println("Adapter Called ${oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()}")
+        return oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()
     }
 
     override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {

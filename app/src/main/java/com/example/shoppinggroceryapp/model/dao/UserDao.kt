@@ -1,6 +1,7 @@
 package com.example.shoppinggroceryapp.model.dao
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -41,6 +42,9 @@ interface UserDao {
     @Query("SELECT * FROM Product")
     fun getOnlyProducts():List<Product>
 
+    @Query("SELECT * FROM PRODUCT")
+    fun getOnlyProductsLiveData():LiveData<MutableList<Product>>
+
     @Query("SELECT * FROM user WHERE ((userEmail=:emailOrPhone OR userPhone=:emailOrPhone) AND (userPassword=:password))")
     fun getUser(emailOrPhone:String,password:String):User
 
@@ -52,6 +56,9 @@ interface UserDao {
 
     @Query("SELECT * FROM Product WHERE(Product.categoryName =:query)")
     fun getProductByCategory(query:String):List<Product>
+
+    @Query("SELECT * FROM Product WHERE(Product.categoryName =:query)")
+    fun getProductByCategoryLiveData(query:String):LiveData<MutableList<Product>>
 
     @Query("SELECT * FROM User JOIN Address ON User.userId = Address.userId WHERE User.userId=:id")
     fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>
@@ -77,7 +84,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addItemsToCart(cart:Cart)
 
-
+//
+//    @Update
+//    fun updateProduct(product:Product)
     @Delete
     fun removeProductInCart(cart: Cart)
 
