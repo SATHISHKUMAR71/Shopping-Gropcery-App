@@ -40,14 +40,9 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
     private lateinit var fileDir:File
     private lateinit var selectedProduct: Product
     private var productList:MutableList<Product> = mutableListOf()
-    private lateinit var userCartList:MutableList<Cart>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Thread{
-            userCartList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getCartItems(MainActivity.cartId).toMutableList()
-        }.start()
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,9 +58,9 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
             val str ="₹"+ (it?:0).toString()
             totalCostButton.text =str
         }
-        var userDb:UserDao = AppDatabase.getAppDatabase(requireContext()).getUserDao()
+        val userDb:UserDao = AppDatabase.getAppDatabase(requireContext()).getUserDao()
         fileDir = File(requireContext().filesDir,"AppImages")
-
+        totalCost.value = 0f
         Thread{
             val list = userDb.getCartItems(MainActivity.cartId)
             for(cart in list){
@@ -88,7 +83,7 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
             Thread{
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOnlyProducts().toMutableList()
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,userCartList,fileDir,searchbarTop,bottomNav)
+                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav,"P")
                     println(productList)
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
@@ -99,8 +94,7 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
                 println("Product List: $productList")
                 handler.post {
-                    productRV.adapter = ProductListAdapter(this,productList,userCartList,fileDir,searchbarTop,bottomNav)
-                    println("User cart List: $userCartList")
+                    productRV.adapter = ProductListAdapter(this,productList,fileDir,searchbarTop,bottomNav,"P")
                     productRV.layoutManager = LinearLayoutManager(requireContext())
                 }
             }.start()

@@ -32,9 +32,9 @@ class OfferFragment(var searchbarTop:LinearLayout,var bottomNav:BottomNavigation
         val offerList = view.findViewById<RecyclerView>(R.id.offerList)
         val fileDir = File(requireContext().filesDir,"AppImages")
         Thread{
-            val offeredProductList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOfferedProducts()
+            val offeredProductList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getOfferedProducts().toMutableList()
             MainActivity.handler.post {
-                offerList.adapter = ProductListAdapter(this,offeredProductList,null,fileDir,searchbarTop,bottomNav)
+                offerList.adapter = ProductListAdapter(this,offeredProductList,fileDir,searchbarTop,bottomNav,"O")
                 offerList.layoutManager = LinearLayoutManager(context)
             }
         }.start()

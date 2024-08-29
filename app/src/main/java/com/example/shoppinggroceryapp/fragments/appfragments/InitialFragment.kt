@@ -83,7 +83,7 @@ class InitialFragment : Fragment() {
 //                            R.anim.fade_in,
 //                            R.anim.slide_out
 //                        )
-                        .replace(R.id.fragmentMainLayout,CartFragment())
+                        .replace(R.id.fragmentMainLayout,CartFragment(searchBarTop,bottomNav))
                         .addToBackStack("Cart Fragment")
                         .commit()
                 }

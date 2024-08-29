@@ -1,5 +1,6 @@
 package com.example.shoppinggroceryapp.model.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -66,6 +67,12 @@ interface UserDao {
 
     @Query("SELECT * FROM Cart WHERE Cart.cartId=:cartId")
     fun getCartItems(cartId:Int):List<Cart>
+
+    @Query("SELECT Product.* FROM Cart Join Product ON Product.productId = Cart.productId WHERE Cart.cartId=:cartId")
+    fun getProductsByCartId(cartId:Int):List<Product>
+
+    @Query("SELECT Product.* FROM Cart Join Product ON Product.productId = Cart.productId WHERE Cart.cartId=:cartId")
+    fun getProductsByCartIdLiveData(cartId:Int):LiveData<MutableList<Product>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addItemsToCart(cart:Cart)

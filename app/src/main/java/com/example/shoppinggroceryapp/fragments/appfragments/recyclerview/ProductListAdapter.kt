@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.CartFragment
 import com.example.shoppinggroceryapp.fragments.appfragments.productfragments.ProductDetailFragment
 import com.example.shoppinggroceryapp.fragments.appfragments.productfragments.ProductListFragment
 import com.example.shoppinggroceryapp.model.dao.UserDao
@@ -25,13 +26,20 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import java.io.File
 
-class ProductListAdapter(var fragment: Fragment, private var productList:List<Product>,private var cartItems:List<Cart>?,
-                         private var file: File, private var searchBarTop:LinearLayout, private var bottomNav: BottomNavigationView):RecyclerView.Adapter<ProductListAdapter.ProductLargeImageHolder>() {
+class ProductListAdapter(var fragment: Fragment, private var productList:MutableList<Product>,
+                         private var file: File, private var searchBarTop:LinearLayout, private var bottomNav: BottomNavigationView,
+                         private var tag:String):RecyclerView.Adapter<ProductListAdapter.ProductLargeImageHolder>() {
 
                              private var userDb:UserDao =
                                  AppDatabase.getAppDatabase(fragment.requireContext()).getUserDao()
 
     var size = 0
+    private var countList = mutableListOf<Int>()
+    init {
+        for(i in 0..<productList.size){
+            countList.add(i,0)
+        }
+    }
     inner class ProductLargeImageHolder(productLargeView:View):RecyclerView.ViewHolder(productLargeView){
         val productImage = productLargeView.findViewById<ImageView>(R.id.productImageLong)
         val brandName = productLargeView.findViewById<TextView>(R.id.brandName)
@@ -54,30 +62,37 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
 
     override fun getItemCount(): Int {
         size = productList.size
-        return if(size==0)1 else size
+        return if(size==0)0 else size
     }
 
     override fun onBindViewHolder(holder: ProductLargeImageHolder, position: Int) {
-        println("**** On PRODUCT LIST ADAPTER")
-
+        println("**** On PRODUCT LIST ADAPTER $tag")
         if(size==0){
             Toast.makeText(fragment.requireContext(),"No Items in this Category",Toast.LENGTH_SHORT).show()
         }
         else{
             Thread{
                 val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
+                println("AT Thread DATAS")
                 if(cart!=null){
                     MainActivity.handler.post {
                         holder.productAddOneTime.visibility = View.GONE
                         holder.productAddRemoveLayout.visibility = View.VISIBLE
+                        countList[position] = cart.totalItems
+                        println("AT Thread DATAS IF $countList")
                         holder.totalItems.text = cart.totalItems.toString()
                     }
                 }
                 else{
-                    holder.productAddOneTime.visibility = View.VISIBLE
-                    holder.productAddRemoveLayout.visibility = View.GONE
-                    holder.totalItems.text = "0"
+                    MainActivity.handler.post {
+                        println("AT Thread DATAS ELSE")
+                        holder.productAddOneTime.visibility = View.VISIBLE
+                        holder.productAddRemoveLayout.visibility = View.GONE
+                        countList[position] = 0
+                        holder.totalItems.text = "0"
+                    }
                 }
+                println("IN THREAD DATAS ${countList.size} ${productList.size } $countList $productList ")
             }.start()
             println("On Bind View Holder ${productList[position].offer}")
             Thread{
@@ -122,7 +137,6 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
             else{
                 holder.productImage.setImageDrawable(ContextCompat.getDrawable(fragment.requireContext(),R.drawable.add_photo_alternate_24px))
             }
-
             setUpListeners(holder,position)
         }
     }
@@ -137,44 +151,109 @@ class ProductListAdapter(var fragment: Fragment, private var productList:List<Pr
 
 
         holder.removeSymbolButton.setOnClickListener {
-            val count = holder.totalItems.text.toString().toInt()-1
-            ProductListFragment.totalCost.value =ProductListFragment.totalCost.value!! - productList[position].price.toFloat()
-            Thread{
-                userDb.addItemsToCart(Cart(MainActivity.cartId,productList[position].productId.toInt(),count,productList[position].price.toFloat()))
-            }.start()
-            if(count==0){
-                holder.totalItems.text = "0"
-                Thread{
-                    val cart = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
-                    userDb.removeProductInCart(cart)
+            if(holder.adapterPosition==position) {
+                val count = --countList[position]
+                if (tag == "P") {
+                    ProductListFragment.totalCost.value =
+                        ProductListFragment.totalCost.value!! - productList[position].price.toFloat()
+                } else if (tag == "C") {
+                    CartFragment.viewPriceDetailData.value =
+                        CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
+                }
+                Thread {
+                    userDb.addItemsToCart(
+                        Cart(
+                            MainActivity.cartId,
+                            productList[position].productId.toInt(),
+                            count,
+                            productList[position].price.toFloat()
+                        )
+                    )
                 }.start()
-                holder.productAddRemoveLayout.visibility = View.GONE
-                holder.productAddOneTime.visibility = View.VISIBLE
-            }
-            else{
-                holder.totalItems.text = count.toString()
+                println("COUNT $count $tag ${tag == "P"} ${tag == "C"}")
+                if (count == 0) {
+                    if (tag == "P" || tag == "O") {
+                    println("##### ${holder.adapterPosition} $position")
+                        holder.totalItems.text = "0"
+                        Thread {
+                            val cart = userDb.getSpecificCart(
+                                MainActivity.cartId,
+                                productList[position].productId.toInt()
+                            )
+                            userDb.removeProductInCart(cart)
+                        }.start()
+                        holder.productAddRemoveLayout.visibility = View.GONE
+                        holder.productAddOneTime.visibility = View.VISIBLE
+                    } else if (tag == "C") {
+                        Thread {
+                            val cart = userDb.getSpecificCart(
+                                MainActivity.cartId,
+                                productList[position].productId.toInt()
+                            )
+                            productList.removeAt(position)
+                            countList.removeAt(position)
+                            userDb.removeProductInCart(cart)
+                            MainActivity.handler.post {
+                                notifyItemRemoved(position)
+                                notifyItemRangeChanged(position,productList.size)
+                                println("DATAS ${countList.size} ${productList.size } $countList $productList ")
+                            }
+                        }.start()
+                    }
+                } else {
+                    holder.totalItems.text = count.toString()
+                }
             }
         }
 
         holder.addSymbolButton.setOnClickListener {
-            val count = holder.totalItems.text.toString().toInt()+1
-            ProductListFragment.totalCost.value =ProductListFragment.totalCost.value!! + productList[position].price.toFloat()
-            Thread{
-                userDb.addItemsToCart(Cart(MainActivity.cartId,productList[position].productId.toInt(),count,productList[position].price.toFloat()))
-            }.start()
-            holder.totalItems.text = count.toString()
+            if (holder.adapterPosition == position) {
+                val count = ++countList[position]
+                if (tag == "P") {
+                    ProductListFragment.totalCost.value =
+                        ProductListFragment.totalCost.value!! + productList[position].price.toFloat()
+                } else if (tag == "C") {
+                    CartFragment.viewPriceDetailData.value =
+                        CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
+                }
+                Thread {
+                    userDb.addItemsToCart(
+                        Cart(
+                            MainActivity.cartId,
+                            productList[position].productId.toInt(),
+                            count,
+                            productList[position].price.toFloat()
+                        )
+                    )
+                }.start()
+                holder.totalItems.text = count.toString()
+            }
         }
+            holder.productAddOneTime.setOnClickListener {
+                if (holder.adapterPosition == position) {
+                    val count = ++countList[position]
+                    holder.totalItems.text = count.toString()
+                    if (tag == "P") {
+                        ProductListFragment.totalCost.value =
+                            ProductListFragment.totalCost.value!! + productList[position].price.toFloat()
+                    } else if (tag == "C") {
 
-        holder.productAddOneTime.setOnClickListener {
-            val count = holder.totalItems.text.toString().toInt()+1
-            holder.totalItems.text = count.toString()
-            ProductListFragment.totalCost.value =ProductListFragment.totalCost.value!! + productList[position].price.toFloat()
-            Thread{
-                userDb.addItemsToCart(Cart(MainActivity.cartId,productList[position].productId.toInt(),count,productList[position].price.toFloat()))
-            }.start()
-            holder.productAddRemoveLayout.visibility = View.VISIBLE
-            holder.productAddOneTime.visibility = View.GONE
-        }
-
+                        CartFragment.viewPriceDetailData.value =
+                            CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
+                    }
+                    Thread {
+                        userDb.addItemsToCart(
+                            Cart(
+                                MainActivity.cartId,
+                                productList[position].productId.toInt(),
+                                count,
+                                productList[position].price.toFloat()
+                            )
+                        )
+                    }.start()
+                    holder.productAddRemoveLayout.visibility = View.VISIBLE
+                    holder.productAddOneTime.visibility = View.GONE
+                }
+            }
     }
 }
