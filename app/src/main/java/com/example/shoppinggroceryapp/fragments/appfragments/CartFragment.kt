@@ -56,10 +56,6 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         }
         viewPriceDetailData.value = 0f
 
-        cartItemsSize.observe(viewLifecycleOwner){
-            val str = "MRP (${cartItemsSize.value} Items)"
-            noOfItems.text = str
-        }
         Thread{
             val list = db.getCartItems(MainActivity.cartId)
             for(cart in list){
@@ -71,15 +67,16 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
             }
         }.start()
 
-        Thread{
-            val cartList = db.getProductsByCartId(MainActivity.cartId)
-            println(cartList.toString())
-            MainActivity.handler.post {
+        MainActivity.handler.post{
+            db.getProductsByCartIdLiveData(MainActivity.cartId).observe(viewLifecycleOwner){ cartList->
+                println("Cart List Observer Called: $cartList")
                 cartItemsSize.value = cartList.size
+                val str = "MRP (${cartList.size} Items)"
+                noOfItems.text = str
                 recyclerView.adapter = ProductListAdapter(this,cartList.toMutableList(),fileDir,searchBarTop,bottomNav,"C")
                 recyclerView.layoutManager = LinearLayoutManager(requireContext())
             }
-        }.start()
+        }
         return view
     }
 }
