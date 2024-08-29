@@ -59,23 +59,12 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         Thread{
             val list = db.getCartItems(MainActivity.cartId)
             for(cart in list){
-                val totalItems = cart.totalItems
-                val price = cart.unitPrice
                 MainActivity.handler.post {
-                    viewPriceDetailData.value = viewPriceDetailData.value!!+(totalItems * price)
+                    viewPriceDetailData.value = viewPriceDetailData.value!!+((cart.totalItems) * (cart.unitPrice))
                 }
             }
         }.start()
 
-//        Thread{
-//            val cartList = db.getProductsByCartId(MainActivity.cartId)
-//            println("CART SIZE: ${cartList.size}")
-//            MainActivity.handler.post {
-//                cartItemsSize= cartList.size
-//                recyclerView.adapter = ProductListAdapter(this,cartList.toMutableList(),fileDir,searchBarTop,bottomNav,"C")
-//                recyclerView.layoutManager = LinearLayoutManager(requireContext())
-//            }
-//        }.start()
         MainActivity.handler.post{
             val adapter = ProductListAdapter(this,fileDir,searchBarTop,bottomNav,"C")
             recyclerView.adapter = adapter

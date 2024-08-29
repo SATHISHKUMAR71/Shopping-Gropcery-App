@@ -70,38 +70,38 @@ class ProductListAdapter(var fragment: Fragment,
     }
 
     override fun onBindViewHolder(holder: ProductLargeImageHolder, position: Int) {
-        println("**** On PRODUCT LIST ADAPTER $tag $size")
+
         if(size==0){
             Toast.makeText(fragment.requireContext(),"No Items in this Category",Toast.LENGTH_SHORT).show()
         }
         else{
             Thread{
-                println("**** In Thread$productList $position ${holder.absoluteAdapterPosition}")
+
                 val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
-                println("AT Thread DATAS")
+
                 if(cart!=null){
-                    println("===== on Thread If $countList")
+
                     MainActivity.handler.post {
                         holder.productAddOneTime.visibility = View.GONE
                         holder.productAddRemoveLayout.visibility = View.VISIBLE
                         countList[position] = cart.totalItems
-                        println("AT Thread DATAS IF $countList")
+
                         holder.totalItems.text = cart.totalItems.toString()
                     }
                 }
                 else{
-                    println("===== on Thread Else")
+
                     MainActivity.handler.post {
-                        println("AT Thread DATAS ELSE")
+
                         holder.productAddOneTime.visibility = View.VISIBLE
                         holder.productAddRemoveLayout.visibility = View.GONE
                         countList[position] = 0
                         holder.totalItems.text = "0"
                     }
                 }
-                println("IN THREAD DATAS ${countList.size} ${productList.size } $countList $productList ")
+
             }.start()
-            println("On Bind View Holder ${productList[position].offer}")
+
             Thread{
                 val brand = AppDatabase.getAppDatabase(fragment.requireContext()).getRetailerDao().getBrandName(productList[position].brandId)
                 MainActivity.handler.post {
@@ -132,13 +132,13 @@ class ProductListAdapter(var fragment: Fragment,
             if(url.isNotEmpty()){
                 try{
                     val imagePath = File(file,url)
-                    println(imagePath.absolutePath)
+
                     val bitmap = BitmapFactory.decodeFile(imagePath.absolutePath)
                     holder.productImage.setImageBitmap(bitmap)
                 }
                 catch (e:Exception){
                     holder.productImage.setImageDrawable(ContextCompat.getDrawable(fragment.requireContext(),R.drawable.gram_pulses))
-                    println("Error: $e")
+
                 }
             }
             else{
@@ -162,8 +162,6 @@ class ProductListAdapter(var fragment: Fragment,
                 val count = --countList[position]
                 if (count == 0) {
                     if (tag == "P" || tag == "O") {
-                        println("##### ${holder.absoluteAdapterPosition} $position")
-                        println("===== on Thread Remove if tag is p and c count 0")
                         Thread {
                             val cart = userDb.getSpecificCart(
                                 MainActivity.cartId,
@@ -174,13 +172,13 @@ class ProductListAdapter(var fragment: Fragment,
                         holder.productAddRemoveLayout.visibility = View.GONE
                         holder.productAddOneTime.visibility = View.VISIBLE
                     } else if (tag == "C") {
+                        CartFragment.viewPriceDetailData.value = CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
+                        println("!!!!! Product count is zero ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                         Thread {
-                            println("===== on Thread else on remove symbol count 0")
                             val cart = userDb.getSpecificCart(
                                 MainActivity.cartId,
                                 productList[position].productId.toInt()
                             )
-                            println("!!!! Item Removed From Cart")
                             productList.removeAt(position)
                             countList.removeAt(position)
                             userDb.removeProductInCart(cart)
@@ -192,6 +190,7 @@ class ProductListAdapter(var fragment: Fragment,
                         }.start()
                     }
                     holder.totalItems.text = "0"
+
                 }
                 else {
                     Thread {
@@ -203,20 +202,22 @@ class ProductListAdapter(var fragment: Fragment,
                                 productList[position].price.toFloat()
                             )
                         )
-                        println("Item Increased in Inventory")
+
                         val product = productList[position].copy(availableItems = productList[position].availableItems+1)
                         retailerDb.updateProduct(product)
-                        println("!!!! Item Removed in Cart")
+
                     }.start()
-                    println("===== on Thread  on remove symbol count != 0 $count ${countList[position]} $countList")
                     holder.totalItems.text = count.toString()
                 }
-                if (tag == "P") {
-                    ProductListFragment.totalCost.value =
-                        ProductListFragment.totalCost.value!! - productList[position].price.toFloat()
-                } else if (tag == "C") {
-                    CartFragment.viewPriceDetailData.value =
-                        CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
+                if(count!=0){
+                    if (tag == "P") {
+                        ProductListFragment.totalCost.value =
+                            ProductListFragment.totalCost.value!! - productList[position].price.toFloat()
+                    } else if (tag == "C") {
+                        CartFragment.viewPriceDetailData.value =
+                            CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
+                        println("!!!!! Product Remove ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
+                    }
                 }
             }
         }
@@ -230,6 +231,7 @@ class ProductListAdapter(var fragment: Fragment,
                 } else if (tag == "C") {
                     CartFragment.viewPriceDetailData.value =
                         CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
+                    println("!!!!! Add Symbol ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                 }
                 Thread {
                     userDb.addItemsToCart(
@@ -242,9 +244,9 @@ class ProductListAdapter(var fragment: Fragment,
                     )
                     val product = productList[position].copy(availableItems = productList[position].availableItems-1)
                     retailerDb.updateProduct(product)
-                    println("!!!! Item Added in Cart")
+
                 }.start()
-                println("===== on Thread on add symbol $count")
+
                 holder.totalItems.text = count.toString()
             }
         }
@@ -253,7 +255,7 @@ class ProductListAdapter(var fragment: Fragment,
                 if (holder.absoluteAdapterPosition == position) {
                     val count = ++countList[position]
                     holder.totalItems.text = count.toString()
-                    println("===== on Thread add one time symbol $count")
+
                     if (tag == "P") {
                         ProductListFragment.totalCost.value =
                             ProductListFragment.totalCost.value!! + productList[position].price.toFloat()
@@ -261,6 +263,7 @@ class ProductListAdapter(var fragment: Fragment,
 
                         CartFragment.viewPriceDetailData.value =
                             CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
+                        println("!!!!! Product One Added ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                     }
                     Thread {
                         userDb.addItemsToCart(
@@ -281,7 +284,7 @@ class ProductListAdapter(var fragment: Fragment,
     }
 
     fun setProducts(newList:List<Product>){
-        println("Set Products Called")
+
         val diffUtil = CartItemsDiffUtil(productList,newList)
         if(firstTimeLaunch==0){
             countList.clear()

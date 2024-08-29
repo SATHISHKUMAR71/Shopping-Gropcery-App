@@ -15,7 +15,6 @@ class CartItemsDiffUtil(
     }
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-        println("Adapter Called ${oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()}")
         return oldList[oldItemPosition].hashCode() == newList[newItemPosition].hashCode()
     }
 
