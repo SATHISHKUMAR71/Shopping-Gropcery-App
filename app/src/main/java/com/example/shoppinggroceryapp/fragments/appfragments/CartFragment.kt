@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.accountfragments.SavedAddress
+import com.example.shoppinggroceryapp.fragments.appfragments.orderfragments.OrderSummaryFragment
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
 import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.user.Address
@@ -103,7 +104,10 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         }.start()
 
         continueButton.setOnClickListener {
-            
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,OrderSummaryFragment(searchBarTop,bottomNav))
+                .addToBackStack("Order Summary Fragment")
+                .commit()
         }
         addNewAddress.setOnClickListener {
             parentFragmentManager.beginTransaction()
