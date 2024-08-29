@@ -21,11 +21,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.CartFragment
+import com.example.shoppinggroceryapp.fragments.appfragments.CategoryFragment
 import com.example.shoppinggroceryapp.fragments.appfragments.recyclerview.ProductListAdapter
 import com.example.shoppinggroceryapp.model.dao.UserDao
 import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.order.Cart
 import com.example.shoppinggroceryapp.model.entities.products.Product
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import java.io.File
@@ -53,10 +56,29 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         val productRV = view.findViewById<RecyclerView>(R.id.productListRecyclerView)
         val handler = Handler(Looper.getMainLooper())
         val totalCostButton = view.findViewById<MaterialButton>(R.id.totalPriceWorthInCart)
+        val exploreCategoryButton = view.findViewById<MaterialButton>(R.id.categoryButtonProductList)
+        val productListToolbar =view.findViewById<MaterialToolbar>(R.id.productListToolBar)
 
+        productListToolbar.setNavigationOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
         totalCost.observe(viewLifecycleOwner){
             val str ="₹"+ (it?:0).toString()
             totalCostButton.text =str
+        }
+
+        totalCostButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,CartFragment(searchbarTop,bottomNav))
+                .addToBackStack("Going to Cart")
+                .commit()
+        }
+
+        exploreCategoryButton.setOnClickListener {
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,CategoryFragment(searchbarTop,bottomNav))
+                .addToBackStack("Exploring Category")
+                .commit()
         }
         val userDb:UserDao = AppDatabase.getAppDatabase(requireContext()).getUserDao()
         fileDir = File(requireContext().filesDir,"AppImages")

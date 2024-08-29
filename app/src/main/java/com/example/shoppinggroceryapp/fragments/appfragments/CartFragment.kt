@@ -1,10 +1,12 @@
 package com.example.shoppinggroceryapp.fragments.appfragments
 
 import android.os.Bundle
+import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.lifecycle.MutableLiveData
@@ -49,9 +51,11 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         val changeAddress = view.findViewById<MaterialButton>(R.id.changeAddressButton)
         val addMoreGrocery = view.findViewById<MaterialButton>(R.id.addMoreGroceryButton)
         val addressContactNumber = view.findViewById<TextView>(R.id.addressPhone)
+        val bottomLayout = view.findViewById<LinearLayout>(R.id.linearLayout11)
         val price = view.findViewById<MaterialButton>(R.id.viewPriceDetailsButton)
         val priceDetails = view.findViewById<LinearLayout>(R.id.linearLayout12)
         val noOfItems = view.findViewById<TextView>(R.id.priceDetailsMrpTotalItems)
+        val emptyCart = view.findViewById<ImageView>(R.id.emptyCartImage)
         val totalAmount =view.findViewById<TextView>(R.id.priceDetailsMrpPrice)
         val discountedAmount = view.findViewById<TextView>(R.id.priceDetailsDiscountedAmount)
         val grandTotalAmount = view.findViewById<TextView>(R.id.priceDetailsTotalAmount)
@@ -118,17 +122,29 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
             recyclerView.adapter = adapter
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
             db.getProductsByCartIdLiveData(MainActivity.cartId).observe(viewLifecycleOwner){
-                println("Adapter Called: $it")
-                adapter.setProducts(it)
-                val str = "MRP (${it.size}) Items"
-                var amt = 0f
-                for(i in it){
-                    amt+=(i.price.toFloat())
+                if(it.size==0){
+                    recyclerView.visibility = View.GONE
+                    priceDetails.visibility =View.GONE
+                    bottomLayout.visibility =View.GONE
+                    emptyCart.visibility = View.VISIBLE
                 }
-                var str1 = "₹$amt"
-                noOfItems.text =str
-                var totalPrice = "₹${viewPriceDetailData.value}"
-                totalAmount.text = totalPrice
+                else{
+                    recyclerView.visibility = View.VISIBLE
+                    priceDetails.visibility =View.VISIBLE
+                    bottomLayout.visibility =View.VISIBLE
+                    emptyCart.visibility = View.GONE
+                    println("Adapter Called: $it")
+                    adapter.setProducts(it)
+                    val str = "MRP (${it.size}) Items"
+                    var amt = 0f
+                    for(i in it){
+                        amt+=(i.price.toFloat())
+                    }
+                    var str1 = "₹$amt"
+                    noOfItems.text =str
+                    var totalPrice = "₹${viewPriceDetailData.value}"
+                    totalAmount.text = totalPrice
+                }
             }
         }
         return view
