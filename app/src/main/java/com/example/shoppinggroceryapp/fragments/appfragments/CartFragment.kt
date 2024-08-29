@@ -29,6 +29,7 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         var cartItemsSize = 0
         var selectedAddress:Address? = null
     }
+    private var continuePressed = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         println("On Create Cart Frag")
@@ -57,6 +58,7 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         val noOfItems = view.findViewById<TextView>(R.id.priceDetailsMrpTotalItems)
         val emptyCart = view.findViewById<ImageView>(R.id.emptyCartImage)
         val totalAmount =view.findViewById<TextView>(R.id.priceDetailsMrpPrice)
+        val continueButton = view.findViewById<MaterialButton>(R.id.continueButton)
         val discountedAmount = view.findViewById<TextView>(R.id.priceDetailsDiscountedAmount)
         val grandTotalAmount = view.findViewById<TextView>(R.id.priceDetailsTotalAmount)
         addMoreGrocery.setOnClickListener {
@@ -100,6 +102,9 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
             }
         }.start()
 
+        continueButton.setOnClickListener {
+            
+        }
         addNewAddress.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragmentMainLayout,SavedAddress(searchBarTop))
