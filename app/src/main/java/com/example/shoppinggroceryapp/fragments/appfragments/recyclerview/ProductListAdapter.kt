@@ -80,9 +80,8 @@ class ProductListAdapter(var fragment: Fragment,
             Thread{
 
                 val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
-
+                println("**** ${MainActivity.cartId} ${MainActivity.userId} $cart ")
                 if(cart!=null){
-
                     MainActivity.handler.post {
                         holder.productAddOneTime.visibility = View.GONE
                         holder.productAddRemoveLayout.visibility = View.VISIBLE
@@ -175,12 +174,12 @@ class ProductListAdapter(var fragment: Fragment,
                         holder.productAddOneTime.visibility = View.VISIBLE
                     } else if (tag == "C") {
                         val positionVal = productList[position].price.toFloat()
-                        println("!!!!! Product count is zero ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                         Thread {
                             val cart = userDb.getSpecificCart(
                                 MainActivity.cartId,
                                 productList[position].productId.toInt()
                             )
+                            println("**** $cart")
                             productList.removeAt(position)
                             countList.removeAt(position)
                             userDb.removeProductInCart(cart)
@@ -219,7 +218,6 @@ class ProductListAdapter(var fragment: Fragment,
                     } else if (tag == "C") {
                         CartFragment.viewPriceDetailData.value =
                             CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
-                        println("!!!!! Product Remove ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                     }
                 }
             }
@@ -234,7 +232,6 @@ class ProductListAdapter(var fragment: Fragment,
                 } else if (tag == "C") {
                     CartFragment.viewPriceDetailData.value =
                         CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
-                    println("!!!!! Add Symbol ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                 }
                 Thread {
                     userDb.addItemsToCart(
@@ -266,7 +263,6 @@ class ProductListAdapter(var fragment: Fragment,
 
                         CartFragment.viewPriceDetailData.value =
                             CartFragment.viewPriceDetailData.value!! + productList[position].price.toFloat()
-                        println("!!!!! Product One Added ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                     }
                     Thread {
                         userDb.addItemsToCart(

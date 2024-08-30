@@ -34,7 +34,6 @@ class OrderSummaryFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNav
         val continueToPayment = view.findViewById<MaterialButton>(R.id.continueButtonOrderSummary)
         val viewProductDetails = view.findViewById<MaterialButton>(R.id.viewPriceDetailsButtonOrderSummary)
         val orderSummaryToolBar = view.findViewById<MaterialToolbar>(R.id.orderSummaryToolbar)
-
         val addressVal = "${CartFragment.selectedAddress?.buildingName}, ${CartFragment.selectedAddress?.streetName}, ${CartFragment.selectedAddress?.city}, ${CartFragment.selectedAddress?.state}, ${CartFragment.selectedAddress?.postalCode}"
         addressOwnerName.text = CartFragment.selectedAddress?.addressContactName
         addressValue.text = addressVal
@@ -65,7 +64,10 @@ class OrderSummaryFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNav
         }
 
         continueToPayment.setOnClickListener {
-
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,PaymentFragment(searchBarTop,bottomNav))
+                .addToBackStack("Payment Fragment")
+                .commit()
         }
         return view
     }

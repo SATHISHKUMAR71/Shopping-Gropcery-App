@@ -116,7 +116,6 @@ class ProductListFragment(var category:String?, private var searchbarTop:LinearL
         else{
             Thread{
                 productList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getProductByCategory(category!!).toMutableList()
-                println("Product List: $productList")
                 handler.post {
                     productRV.adapter = adapter
                     productRV.layoutManager = LinearLayoutManager(requireContext())

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
+import com.example.shoppinggroceryapp.MainActivity.Companion.cartId
 import com.example.shoppinggroceryapp.MainActivity.Companion.userEmail
 import com.example.shoppinggroceryapp.MainActivity.Companion.userFirstName
 import com.example.shoppinggroceryapp.MainActivity.Companion.userId
@@ -15,6 +16,7 @@ import com.example.shoppinggroceryapp.MainActivity.Companion.userLastName
 import com.example.shoppinggroceryapp.MainActivity.Companion.userPhone
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.accountfragments.AccountFragment
+import com.example.shoppinggroceryapp.model.entities.order.CartMapping
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.search.SearchBar
 import com.google.android.material.search.SearchView

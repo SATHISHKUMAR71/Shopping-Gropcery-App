@@ -9,9 +9,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.shoppinggroceryapp.MainActivity
+import com.example.shoppinggroceryapp.MainActivity.Companion.cartId
+import com.example.shoppinggroceryapp.MainActivity.Companion.userId
 import com.example.shoppinggroceryapp.R
 import com.example.shoppinggroceryapp.fragments.appfragments.InitialFragment
 import com.example.shoppinggroceryapp.model.database.AppDatabase
+import com.example.shoppinggroceryapp.model.entities.order.CartMapping
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -69,9 +73,18 @@ class LoginFragment : Fragment() {
                     editor.putString("userPhone",user.userPhone)
                     editor.putString("userId",user.userId.toString())
                     editor.apply()
-                    val pref1 = requireActivity().getSharedPreferences("freshCart",Context.MODE_PRIVATE)
-                    val boo1 = pref1.getBoolean("isSigned",false)
-                    println("data saved $boo1")
+                    Thread {
+                        val db1 = db.getUserDao()
+                        val cart: CartMapping? = db1.getCartForUser(user.userId)
+                        if (cart == null) {
+                            db1.addCartForUser(CartMapping(0, userId = userId.toInt(), "available"))
+                            val newCart = db1.getCartForUser(userId.toInt())
+                            cartId = newCart.cartId
+                        } else {
+                            cartId = cart.cartId
+                            println(db1.getCartItems(cartId))
+                        }
+                    }.start()
                     handler.post{
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.fragmentBody,InitialFragment())

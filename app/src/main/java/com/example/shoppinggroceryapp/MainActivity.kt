@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         private val permissions = arrayOf(Manifest.permission.CAMERA)
         var userFirstName = ""
         var userLastName = ""
-        var userId = ""
+        var userId = "-1"
         var userEmail = ""
         var userPhone = ""
         var cartId = 0
@@ -69,19 +69,25 @@ class MainActivity : AppCompatActivity() {
                 100)
         }
 
-//        val db = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
+        val db1 = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
         val db = AppDatabase.getAppDatabase(baseContext).getUserDao()
-
-        Thread{
-            val cart:CartMapping? = db.getCartForUser(userId.toInt())
-            if(cart==null){
-                db.addCartForUser(CartMapping(0, userId = userId.toInt(),"available"))
-            }
-            else{
-                println("Cart is Already available for the user $cart")
-                cartId = cart.cartId
-                println(db.getCartItems(cartId))
-            }
-        }.start()
+        if(boo) {
+            Thread {
+                val cart: CartMapping? = db.getCartForUser(userId.toInt())
+                if (cart == null) {
+                    db.addCartForUser(CartMapping(0, userId = userId.toInt(), "available"))
+                    val newCart = db.getCartForUser(userId.toInt())
+                    println("Cart is Al not available")
+                    cartId = newCart.cartId
+                } else {
+                    println("Cart is Already available for the user $cart")
+                    cartId = cart.cartId
+                    println(db.getCartItems(cartId))
+                }
+                println(db.getOrdersForUser(userId.toInt()))
+                println(db1.getOrderDetails())
+                println("Order Details")
+            }.start()
+        }
     }
 }

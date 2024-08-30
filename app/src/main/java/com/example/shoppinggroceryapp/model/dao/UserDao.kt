@@ -10,6 +10,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.shoppinggroceryapp.model.entities.order.Cart
 import com.example.shoppinggroceryapp.model.entities.order.CartMapping
+import com.example.shoppinggroceryapp.model.entities.order.OrderDetails
 import com.example.shoppinggroceryapp.model.entities.products.Category
 import com.example.shoppinggroceryapp.model.entities.products.Product
 import com.example.shoppinggroceryapp.model.entities.products.ProductWithCategory
@@ -63,6 +64,10 @@ interface UserDao {
     @Query("SELECT * FROM User JOIN Address ON User.userId = Address.userId WHERE User.userId=:id")
     fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>
 
+
+    @Query("SELECT OrderDetails.* FROM OrderDetails JOIN CartMapping ON CartMapping.cartId=OrderDetails.cartId WHERE CartMapping.userId=:userID")
+    fun getOrdersForUser(userID:Int):List<OrderDetails>
+
     @Query("SELECT Product.*,Category.parentCategoryName,Category.categoryDescription FROM Product JOIN Category ON Product.categoryName=Category.categoryName")
     fun getProducts():Map<Category,List<Product>>
 
@@ -72,11 +77,16 @@ interface UserDao {
     @Insert
     fun addCartForUser(cartMapping:CartMapping)
 
+
+
     @Query("SELECT * FROM Cart WHERE Cart.cartId=:cartId")
     fun getCartItems(cartId:Int):List<Cart>
 
     @Query("SELECT Product.* FROM Cart Join Product ON Product.productId = Cart.productId WHERE Cart.cartId=:cartId")
     fun getProductsByCartId(cartId:Int):List<Product>
+
+
+
 
     @Query("SELECT Product.* FROM Cart Join Product ON Product.productId = Cart.productId WHERE Cart.cartId=:cartId")
     fun getProductsByCartIdLiveData(cartId:Int):LiveData<MutableList<Product>>
@@ -90,6 +100,8 @@ interface UserDao {
     @Delete
     fun removeProductInCart(cart: Cart)
 
+    @Update
+    fun updateCartMapping(cartMapping: CartMapping)
     @Query("SELECT * FROM Cart WHERE Cart.cartId=:cartId and Cart.productId=:productId")
     fun getSpecificCart(cartId:Int,productId:Int):Cart
     @Update
