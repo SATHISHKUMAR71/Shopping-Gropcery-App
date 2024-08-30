@@ -1,5 +1,6 @@
 package com.example.shoppinggroceryapp.fragments.appfragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.ContactsContract.CommonDataKinds.Im
 import androidx.fragment.app.Fragment
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +23,7 @@ import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.user.Address
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
 class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationView) : Fragment() {
@@ -92,6 +95,7 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
                 priceDetails.visibility =View.VISIBLE
                 bottomLayout.visibility =View.VISIBLE
                 emptyCart.visibility = View.GONE
+                cartItemsSize = ProductListAdapter.productList.size
                 val str = "MRP (${ProductListAdapter.productList.size}) Items"
                 noOfItems.text =str
             }
@@ -133,10 +137,15 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
         }.start()
 
         continueButton.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragmentMainLayout,OrderSummaryFragment(searchBarTop,bottomNav))
-                .addToBackStack("Order Summary Fragment")
-                .commit()
+            if(selectedAddress==null){
+                Snackbar.make(view,"Please Add the Delivery Address to order Items",Toast.LENGTH_SHORT).setBackgroundTint(Color.RED).show()
+            }
+            else{
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentMainLayout,OrderSummaryFragment(searchBarTop,bottomNav))
+                    .addToBackStack("Order Summary Fragment")
+                    .commit()
+            }
         }
         addNewAddress.setOnClickListener {
             parentFragmentManager.beginTransaction()

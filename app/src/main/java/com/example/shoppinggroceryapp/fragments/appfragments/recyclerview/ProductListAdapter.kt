@@ -184,7 +184,7 @@ class ProductListAdapter(var fragment: Fragment,
                             productList.removeAt(position)
                             countList.removeAt(position)
                             userDb.removeProductInCart(cart)
-                            CartFragment.cartItemsSize -= 1
+//                            CartFragment.cartItemsSize -= 1
                             MainActivity.handler.post {
                                 CartFragment.viewPriceDetailData.value = CartFragment.viewPriceDetailData.value!! - positionVal
                                 notifyItemRemoved(position)

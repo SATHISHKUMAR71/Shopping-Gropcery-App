@@ -44,7 +44,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/addressOwnerName"
+                android:id="@+id/addressOwnerNameOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -52,14 +52,14 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/address"
+                android:id="@+id/addressOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:text="#3 abc street, x city, y district, zzzzzz" />
 
             <TextView
-                android:id="@+id/addressPhone"
+                android:id="@+id/addressPhoneOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
@@ -67,7 +67,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/changeAddressButton"
+            android:id="@+id/changeAddressButtonOrderSummary"
             style="@style/Widget.Material3.Button.OutlinedButton.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -129,13 +129,13 @@
             android:padding="5dp">
 
             <TextView
-                android:id="@+id/priceDetailsMrpTotalItems"
+                android:id="@+id/priceDetailsMrpTotalItemsOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="MRP (No. of Items)" />
 
             <TextView
-                android:id="@+id/priceDetailsMrpPrice"
+                android:id="@+id/priceDetailsMrpPriceOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -179,7 +179,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/priceDetailsTotalAmount"
+                android:id="@+id/priceDetailsTotalAmountOrderSummary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -203,7 +203,7 @@
             android:orientation="vertical"
             android:layout_weight="1">
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/viewPriceDetailsButton"
+                android:id="@+id/viewPriceDetailsButtonOrderSummary"
                 style="@style/Widget.Material3.Button.TextButton"
                 android:textAlignment="textStart"
                 android:layout_width="wrap_content"
@@ -214,7 +214,7 @@
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/continueButton"
+            android:id="@+id/continueButtonOrderSummary"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             app:cornerRadius="4dp"
