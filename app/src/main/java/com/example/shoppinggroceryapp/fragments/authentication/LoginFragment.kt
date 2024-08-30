@@ -77,12 +77,12 @@ class LoginFragment : Fragment() {
                         val db1 = db.getUserDao()
                         val cart: CartMapping? = db1.getCartForUser(user.userId)
                         if (cart == null) {
-                            db1.addCartForUser(CartMapping(0, userId = userId.toInt(), "available"))
-                            val newCart = db1.getCartForUser(userId.toInt())
+                            db1.addCartForUser(CartMapping(0, userId = user.userId, "available"))
+                            val newCart = db1.getCartForUser(user.userId)
                             cartId = newCart.cartId
                         } else {
                             cartId = cart.cartId
-                            println(db1.getCartItems(cartId))
+
                         }
                     }.start()
                     handler.post{

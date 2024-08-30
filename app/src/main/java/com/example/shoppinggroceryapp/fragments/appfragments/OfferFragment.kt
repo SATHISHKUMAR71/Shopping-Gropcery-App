@@ -21,7 +21,7 @@ class OfferFragment(var searchbarTop:LinearLayout,var bottomNav:BottomNavigation
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Offer Frag")
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

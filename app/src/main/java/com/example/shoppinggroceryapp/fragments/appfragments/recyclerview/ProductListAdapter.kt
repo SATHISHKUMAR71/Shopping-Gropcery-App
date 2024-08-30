@@ -80,7 +80,6 @@ class ProductListAdapter(var fragment: Fragment,
             Thread{
 
                 val cart:Cart? = userDb.getSpecificCart(MainActivity.cartId,productList[position].productId.toInt())
-                println("**** ${MainActivity.cartId} ${MainActivity.userId} $cart ")
                 if(cart!=null){
                     MainActivity.handler.post {
                         holder.productAddOneTime.visibility = View.GONE
@@ -179,7 +178,6 @@ class ProductListAdapter(var fragment: Fragment,
                                 MainActivity.cartId,
                                 productList[position].productId.toInt()
                             )
-                            println("**** $cart")
                             productList.removeAt(position)
                             countList.removeAt(position)
                             userDb.removeProductInCart(cart)

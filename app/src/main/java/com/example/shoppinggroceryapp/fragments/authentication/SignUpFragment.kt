@@ -112,7 +112,6 @@ class SignUpFragment : Fragment() {
                             Toast.makeText(context,"PhoNe Number or Email is Already Registered",Toast.LENGTH_SHORT).show()
                         }
                     }
-                    println(db.getAllUsers())
                 }.start()
             }
             else{

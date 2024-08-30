@@ -62,7 +62,6 @@ class EditProfile(val searchBarTop:LinearLayout) : Fragment() {
 
         saveDetails.setOnClickListener {
 
-            println("$MainActivity.userEmail")
             val oldEmail = MainActivity.userEmail
             MainActivity.userEmail = email.text.toString()
             MainActivity.userPhone = phone.text.toString()
@@ -75,7 +74,6 @@ class EditProfile(val searchBarTop:LinearLayout) : Fragment() {
             editor.apply()
             Thread{
                 val userOld = db.getUserDao().getUserData(oldEmail)
-                println(userOld.toString())
                 val user = User(
                     userId = userOld.userId,
                     userImage = userOld.userImage,

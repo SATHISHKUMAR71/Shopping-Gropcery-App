@@ -31,7 +31,6 @@ class PaymentFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigati
         val options = resources.getStringArray(R.array.paymentMode)
         val placeOrder = view.findViewById<MaterialButton>(R.id.placeOrder)
         paymentOption.setOnItemClickListener { parent, view, position, id ->
-            println(position)
             paymentOption.setText(options[position])
             paymentMode = options[position]
             if(position==0){

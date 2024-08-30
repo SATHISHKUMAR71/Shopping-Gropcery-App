@@ -13,7 +13,6 @@ class HomeFragment() : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Initial Frag")
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

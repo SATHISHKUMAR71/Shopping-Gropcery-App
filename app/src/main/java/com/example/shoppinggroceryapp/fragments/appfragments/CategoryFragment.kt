@@ -21,7 +21,7 @@ class CategoryFragment(private var searchbarTop: LinearLayout, private var botto
     private lateinit var mainCategoryRV:RecyclerView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Category Frag")
+
     }
 
     override fun onCreateView(

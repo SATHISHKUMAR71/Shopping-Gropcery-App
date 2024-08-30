@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        println(supportFragmentManager.fragments)
         ActivityCompat.requestPermissions(this, permissions, REQUEST_CAMERA_PERMISSION)
 
         val pref = getSharedPreferences("freshCart", Context.MODE_PRIVATE)
@@ -69,7 +68,6 @@ class MainActivity : AppCompatActivity() {
                 100)
         }
 
-        val db1 = AppDatabase.getAppDatabase(baseContext).getRetailerDao()
         val db = AppDatabase.getAppDatabase(baseContext).getUserDao()
         if(boo) {
             Thread {
@@ -77,16 +75,13 @@ class MainActivity : AppCompatActivity() {
                 if (cart == null) {
                     db.addCartForUser(CartMapping(0, userId = userId.toInt(), "available"))
                     val newCart = db.getCartForUser(userId.toInt())
-                    println("Cart is Al not available")
+                    println("Cart is Al not available for user $newCart")
                     cartId = newCart.cartId
                 } else {
                     println("Cart is Already available for the user $cart")
                     cartId = cart.cartId
-                    println(db.getCartItems(cartId))
                 }
-                println(db.getOrdersForUser(userId.toInt()))
-                println(db1.getOrderDetails())
-                println("Order Details")
+                println("Order Details: ${db.getOrdersForUser(userId.toInt())}")
             }.start()
         }
     }

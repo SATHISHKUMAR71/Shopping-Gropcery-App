@@ -47,7 +47,6 @@ class MainCategoryAdapter(var fragment: Fragment, private var mainCategoryList: 
 
         holder.parentCategoryName.text = mainCategoryList[position].parentCategoryName
         holder.parentCategoryDescription.text = mainCategoryList[position].parentCategoryDescription
-        println("IS VISIBLE: ${holder.invisibleView.isVisible} $position ${expandedData.contains(position)} $expandedData")
         refreshViews(fragment.requireContext(),position,holder)
 
         holder.itemView.setOnClickListener {

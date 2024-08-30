@@ -36,10 +36,6 @@ class OrderSuccessFragment(var searchBarTop: LinearLayout, var bottomNav: Bottom
             val list = AppDatabase.getAppDatabase(requireContext()).getUserDao().getCartItems(MainActivity.cartId)
             val addressList = AppDatabase.getAppDatabase(requireContext()).getUserDao().getAddressListForUser(MainActivity.userId.toInt())
             val address = CartFragment.selectedAddress
-            println("Payment MOde: ${PaymentFragment.paymentMode}")
-            println("Cart Items: $list")
-            println("Address : $address")
-            println("Address List : $addressList")
             AppDatabase.getAppDatabase(requireContext()).getRetailerDao().addOrder(
                 OrderDetails(orderId = 0,
                     orderedDate = "30/08/2024",
@@ -52,11 +48,10 @@ class OrderSuccessFragment(var searchBarTop: LinearLayout, var bottomNav: Bottom
             val cart: CartMapping? = db.getCartForUser(userId.toInt())
             if (cart == null) {
                 db.addCartForUser(CartMapping(0, userId = userId.toInt(), "available"))
-                println("Cart Created")
+                var newCart = db.getCartForUser(userId.toInt())
+                cartId = newCart.cartId
             } else {
-                println("Cart is Already available for the user $cart")
                 cartId = cart.cartId
-                println(db.getCartItems(cartId))
             }
         }.start()
         return view

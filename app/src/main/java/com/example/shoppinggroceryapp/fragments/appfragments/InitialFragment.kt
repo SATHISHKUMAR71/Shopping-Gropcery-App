@@ -30,7 +30,6 @@ class InitialFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Home Frag")
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +72,7 @@ class InitialFragment : Fragment() {
             when(it.itemId){
                 R.id.account -> {
                     parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragmentMainLayout, AccountFragment(searchBarTop))
+                        .replace(R.id.fragmentMainLayout, AccountFragment(searchBarTop,bottomNav))
                         .addToBackStack("Account Fragment")
                         .commit()
                 }
@@ -115,11 +114,9 @@ class InitialFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        println("Home On Resume")
     }
 
     override fun onPause() {
         super.onPause()
-        println("Home On Pause")
     }
 }

@@ -14,9 +14,10 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 
-class AccountFragment(private val searchBarTop:LinearLayout) : Fragment() {
+class AccountFragment(private val searchBarTop:LinearLayout,private var bottomNav:BottomNavigationView) : Fragment() {
 
 
     private lateinit var editProfile:MaterialButton
@@ -29,7 +30,7 @@ class AccountFragment(private val searchBarTop:LinearLayout) : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Account Frag")
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,7 +54,10 @@ class AccountFragment(private val searchBarTop:LinearLayout) : Fragment() {
                 .commit()
         }
         orderHistory.setOnClickListener {
-            Toast.makeText(context,"Order History Clicked",Toast.LENGTH_SHORT).show()
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,OrderListFragment(searchBarTop,bottomNav))
+                .addToBackStack("Order List Fragment")
+                .commit()
         }
 
         help.setOnClickListener {

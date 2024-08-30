@@ -36,7 +36,6 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
     private var continuePressed = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        println("On Create Cart Frag")
     }
 
     override fun onCreateView(
@@ -83,14 +82,12 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
             }.start()
         viewPriceDetailData.observe(viewLifecycleOwner){
             if(it==0f){
-                println("IN IF")
                 recyclerView.visibility = View.GONE
                 priceDetails.visibility =View.GONE
                 bottomLayout.visibility =View.GONE
                 emptyCart.visibility = View.VISIBLE
             }
             else{
-                println("IN IF ELSE ${ProductListAdapter.productList.size} ${ProductListAdapter.productList}")
                 recyclerView.visibility = View.VISIBLE
                 priceDetails.visibility =View.VISIBLE
                 bottomLayout.visibility =View.VISIBLE
@@ -99,7 +96,6 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
                 val str = "MRP (${ProductListAdapter.productList.size}) Items"
                 noOfItems.text =str
             }
-            println("VIEW PRICE DETAILS CALLED")
             val str = "₹$it\nView Price Details"
             val str2 = "₹$it"
             totalAmount.text =str2
@@ -117,7 +113,6 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
 
         Thread {
             val addressList = db.getAddressListForUser(MainActivity.userId.toInt())
-            println("Address: $addressList")
             MainActivity.handler.post {
                 if (addressList.isEmpty()) {
                     deliveryAddressNotFound.visibility = View.VISIBLE
@@ -176,7 +171,7 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
 //                    priceDetails.visibility =View.VISIBLE
 //                    bottomLayout.visibility =View.VISIBLE
 //                    emptyCart.visibility = View.GONE
-//                    println("Adapter Called: $it")
+//
 //                    adapter.setProducts(it)
 //                    val str = "MRP (${it.size}) Items"
 //                    var amt = 0f
