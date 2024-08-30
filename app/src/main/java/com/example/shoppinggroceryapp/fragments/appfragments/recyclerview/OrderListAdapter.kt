@@ -3,13 +3,18 @@ package com.example.shoppinggroceryapp.fragments.appfragments.recyclerview
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.fragments.appfragments.accountfragments.OrderDetailFragment
+import com.example.shoppinggroceryapp.fragments.appfragments.accountfragments.OrderListFragment
 import com.example.shoppinggroceryapp.model.entities.order.OrderDetails
 import com.example.shoppinggroceryapp.model.entities.products.CartWithProductData
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class OrderListAdapter(var orderedItems:MutableList<OrderDetails>):RecyclerView.Adapter<OrderListAdapter.OrderLayoutViewHolder>() {
+class OrderListAdapter(var orderedItems:MutableList<OrderDetails>, var fragment:Fragment, var searchBarTop: LinearLayout, var bottomnav: BottomNavigationView):RecyclerView.Adapter<OrderListAdapter.OrderLayoutViewHolder>() {
 
     companion object{
         var cartWithProductList = mutableListOf<MutableList<CartWithProductData>>()
@@ -48,6 +53,15 @@ class OrderListAdapter(var orderedItems:MutableList<OrderDetails>):RecyclerView.
             }
         }
         holder.productNames.text = productName
+
+        holder.itemView.setOnClickListener {
+            OrderListFragment.selectedOrder = orderedItems[position]
+            OrderListFragment.correspondingCartList = cartWithProductList[position]
+            fragment.parentFragmentManager.beginTransaction()
+                .replace(R.id.fragmentMainLayout,OrderDetailFragment(searchBarTop, bottomnav))
+                .addToBackStack("Order Detail Fragment")
+                .commit()
+        }
     }
 
 

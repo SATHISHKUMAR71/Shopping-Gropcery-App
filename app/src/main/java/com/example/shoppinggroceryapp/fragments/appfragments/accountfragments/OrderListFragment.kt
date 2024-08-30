@@ -23,6 +23,8 @@ class OrderListFragment(var searchBarTop:LinearLayout,var bottomnav:BottomNaviga
 
     companion object{
         var orderDetailsMap = mutableMapOf<OrderDetails,List<CartWithProductData>>()
+        var selectedOrder:OrderDetails? = null
+        var correspondingCartList:List<CartWithProductData>? = null
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -40,7 +42,7 @@ class OrderListFragment(var searchBarTop:LinearLayout,var bottomnav:BottomNaviga
             }
             MainActivity.handler.post {
                 val orderList = view.findViewById<RecyclerView>(R.id.orderList)
-                orderList.adapter = OrderListAdapter(orderedItems.toMutableList())
+                orderList.adapter = OrderListAdapter(orderedItems.toMutableList(),this,searchBarTop,bottomnav)
                 orderList.layoutManager = LinearLayoutManager(context)
                 OrderListAdapter.cartWithProductList = cartWithProductsList
             }

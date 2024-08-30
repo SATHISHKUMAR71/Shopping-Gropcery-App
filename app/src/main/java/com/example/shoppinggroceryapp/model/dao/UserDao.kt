@@ -101,7 +101,7 @@ interface UserDao {
 
 
     @Query("SELECT Product.mainImage AS mainImage,Product.productName AS productName,Product.productDescription as productDescription,Cart.totalItems as totalItems,Cart.unitPrice as unitPrice,Product.manufactureDate AS manufactureDate" +
-            ",Product.expiryDate as expiryDate FROM Cart Join Product ON Product.productId=Cart.productId WHERE Cart.cartId=:cartId")
+            ",Product.expiryDate as expiryDate,Product.productQuantity as productQuantity FROM Cart Join Product ON Product.productId=Cart.productId WHERE Cart.cartId=:cartId")
     fun getProductsWithCartId(cartId:Int):List<CartWithProductData>
 
 
