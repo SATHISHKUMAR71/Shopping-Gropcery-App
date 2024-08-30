@@ -35,7 +35,9 @@ class ProductListAdapter(var fragment: Fragment,
 
     private var userDb:UserDao = AppDatabase.getAppDatabase(fragment.requireContext()).getUserDao()
     private var retailerDb:RetailerDao = AppDatabase.getAppDatabase(fragment.requireContext()).getRetailerDao()
-    private var productList:MutableList<Product> = mutableListOf()
+    companion object{
+        var productList:MutableList<Product> = mutableListOf()
+    }
     var firstTimeLaunch = 0
     var size = 0
     private var countList = mutableListOf<Int>()
@@ -172,7 +174,7 @@ class ProductListAdapter(var fragment: Fragment,
                         holder.productAddRemoveLayout.visibility = View.GONE
                         holder.productAddOneTime.visibility = View.VISIBLE
                     } else if (tag == "C") {
-                        CartFragment.viewPriceDetailData.value = CartFragment.viewPriceDetailData.value!! - productList[position].price.toFloat()
+                        val positionVal = productList[position].price.toFloat()
                         println("!!!!! Product count is zero ${CartFragment.viewPriceDetailData.value}  ${productList[position].price}")
                         Thread {
                             val cart = userDb.getSpecificCart(
@@ -184,6 +186,7 @@ class ProductListAdapter(var fragment: Fragment,
                             userDb.removeProductInCart(cart)
                             CartFragment.cartItemsSize -= 1
                             MainActivity.handler.post {
+                                CartFragment.viewPriceDetailData.value = CartFragment.viewPriceDetailData.value!! - positionVal
                                 notifyItemRemoved(position)
                                 notifyItemRangeChanged(position,productList.size)
                             }

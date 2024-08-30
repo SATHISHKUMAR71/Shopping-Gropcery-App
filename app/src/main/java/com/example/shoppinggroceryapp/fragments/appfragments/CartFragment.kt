@@ -68,8 +68,37 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
                 .addToBackStack("Added More Groceries")
                 .commit()
         }
+        MainActivity.handler.post{
+            val adapter = ProductListAdapter(this,fileDir,searchBarTop,bottomNav,"C")
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+            Thread{
+                val list = db.getProductsByCartId(MainActivity.cartId)
+                MainActivity.handler.post {
+                    adapter.setProducts(list)
+                }
+            }.start()
         viewPriceDetailData.observe(viewLifecycleOwner){
+            if(it==0f){
+                println("IN IF")
+                recyclerView.visibility = View.GONE
+                priceDetails.visibility =View.GONE
+                bottomLayout.visibility =View.GONE
+                emptyCart.visibility = View.VISIBLE
+            }
+            else{
+                println("IN IF ELSE ${ProductListAdapter.productList.size} ${ProductListAdapter.productList}")
+                recyclerView.visibility = View.VISIBLE
+                priceDetails.visibility =View.VISIBLE
+                bottomLayout.visibility =View.VISIBLE
+                emptyCart.visibility = View.GONE
+                val str = "MRP (${ProductListAdapter.productList.size}) Items"
+                noOfItems.text =str
+            }
+            println("VIEW PRICE DETAILS CALLED")
             val str = "₹$it\nView Price Details"
+            val str2 = "₹$it"
+            totalAmount.text =str2
             price.text = str
         }
         viewPriceDetailData.value = 0f
@@ -126,35 +155,31 @@ class CartFragment(var searchBarTop:LinearLayout,var bottomNav:BottomNavigationV
                 .addToBackStack("Add New Address")
                 .commit()
         }
-        MainActivity.handler.post{
-            val adapter = ProductListAdapter(this,fileDir,searchBarTop,bottomNav,"C")
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            db.getProductsByCartIdLiveData(MainActivity.cartId).observe(viewLifecycleOwner){
-                if(it.size==0){
-                    recyclerView.visibility = View.GONE
-                    priceDetails.visibility =View.GONE
-                    bottomLayout.visibility =View.GONE
-                    emptyCart.visibility = View.VISIBLE
-                }
-                else{
-                    recyclerView.visibility = View.VISIBLE
-                    priceDetails.visibility =View.VISIBLE
-                    bottomLayout.visibility =View.VISIBLE
-                    emptyCart.visibility = View.GONE
-                    println("Adapter Called: $it")
-                    adapter.setProducts(it)
-                    val str = "MRP (${it.size}) Items"
-                    var amt = 0f
-                    for(i in it){
-                        amt+=(i.price.toFloat())
-                    }
-                    var str1 = "₹$amt"
-                    noOfItems.text =str
-                    var totalPrice = "₹${viewPriceDetailData.value}"
-                    totalAmount.text = totalPrice
-                }
-            }
+//            db.getProductsByCartIdLiveData(MainActivity.cartId).observe(viewLifecycleOwner){
+//                if(it.size==0){
+//                    recyclerView.visibility = View.GONE
+//                    priceDetails.visibility =View.GONE
+//                    bottomLayout.visibility =View.GONE
+//                    emptyCart.visibility = View.VISIBLE
+//                }
+//                else{
+//                    recyclerView.visibility = View.VISIBLE
+//                    priceDetails.visibility =View.VISIBLE
+//                    bottomLayout.visibility =View.VISIBLE
+//                    emptyCart.visibility = View.GONE
+//                    println("Adapter Called: $it")
+//                    adapter.setProducts(it)
+//                    val str = "MRP (${it.size}) Items"
+//                    var amt = 0f
+//                    for(i in it){
+//                        amt+=(i.price.toFloat())
+//                    }
+//                    var str1 = "₹$amt"
+//                    noOfItems.text =str
+//                    var totalPrice = "₹${viewPriceDetailData.value}"
+//                    totalAmount.text = totalPrice
+//                }
+//            }
         }
         return view
     }
