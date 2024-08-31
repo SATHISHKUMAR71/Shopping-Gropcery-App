@@ -7,6 +7,12 @@
     tools:context=".fragments.appfragments.accountfragments.OrderDetailFragment">
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/materialToolbarOrderDetail"
         android:layout_width="match_parent"
@@ -40,11 +46,49 @@
     </LinearLayout>
 
     <LinearLayout
+        android:paddingTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/shippingAddressDetails"
+        android:layout_margin="10dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shipping Address"/>
+        <LinearLayout
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:background="@color/white"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addressOwnerName"
+                android:textSize="20sp"
+                android:layout_marginBottom="10dp"
+                android:text="User Name"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/address"
+                android:text="#3 abc street, x city, y district, zzzzzz"/>
+            <TextView
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/addressPhone"
+                android:text="Phone Number"/>
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
         android:orientation="vertical"
         android:id="@+id/orderedProductViews"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout14">
+        app:layout_constraintTop_toBottomOf="@+id/shippingAddressDetails">
     </LinearLayout>
 
 
@@ -132,6 +176,6 @@
                 android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
-
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

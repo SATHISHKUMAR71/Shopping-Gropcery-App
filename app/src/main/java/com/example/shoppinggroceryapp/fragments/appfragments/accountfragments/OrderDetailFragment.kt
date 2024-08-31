@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.example.shoppinggroceryapp.MainActivity
 import com.example.shoppinggroceryapp.R
+import com.example.shoppinggroceryapp.model.database.AppDatabase
 import com.example.shoppinggroceryapp.model.entities.products.CartWithProductData
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,9 +26,24 @@ class OrderDetailFragment(var searchBarTop:LinearLayout,var bottomnav: BottomNav
         val view = inflater.inflate(R.layout.fragment_order_detail, container, false)
         val productsContainer = view.findViewById<LinearLayout>(R.id.orderedProductViews)
 
+        if(arguments?.getBoolean("hideToolBar")==true){
+            view.findViewById<MaterialToolbar>(R.id.materialToolbarOrderDetail).visibility = View.GONE
+        }
         view.findViewById<MaterialToolbar>(R.id.materialToolbarOrderDetail).setNavigationOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
+        Thread{
+            val address = AppDatabase.getAppDatabase(requireContext()).getUserDao().getAddress(OrderListFragment.selectedOrder!!.addressId)
+            MainActivity.handler.post {
+                view.findViewById<TextView>(R.id.addressOwnerName).text = address.addressContactName
+                val addressText = with(address){
+                    "$buildingName, $streetName, $city, $state, $postalCode"
+                }
+                view.findViewById<TextView>(R.id.address).text = addressText
+                view.findViewById<TextView>(R.id.addressPhone).text = address.addressContactNumber
+            }
+        }.start()
         view.findViewById<TextView>(R.id.orderIdValue).text = OrderListFragment.selectedOrder?.orderId.toString()
         var totalItems = 0
         val productView = (LayoutInflater.from(requireContext()).inflate(R.layout.ordered_product_layout,productsContainer,false))

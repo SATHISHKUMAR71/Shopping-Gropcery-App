@@ -66,7 +66,8 @@ interface UserDao {
     fun getAddressDetailsForUser(id:Int):Map<User,List<Address>>
 
 
-
+    @Query("SELECT * FROM Address WHERE Address.addressId=:addressId")
+    fun getAddress(addressId:Int):Address
 
     @Query("SELECT Product.*,Category.parentCategoryName,Category.categoryDescription FROM Product JOIN Category ON Product.categoryName=Category.categoryName")
     fun getProducts():Map<Category,List<Product>>
@@ -108,7 +109,8 @@ interface UserDao {
     @Query("SELECT OrderDetails.* FROM OrderDetails JOIN CartMapping ON CartMapping.cartId=OrderDetails.cartId WHERE CartMapping.userId=:userID")
     fun getOrdersForUser(userID:Int):List<OrderDetails>
 
-
+    @Query("SELECT * FROM OrderDetails WHERE OrderDetails.cartId=:cartId")
+    fun getOrder(cartId:Int):OrderDetails
 
     @Delete
     fun removeProductInCart(cart: Cart)
